@@ -46,6 +46,12 @@ def main():
         api_key=Config.ANTHROPIC_API_KEY,
         temperature=Config.TEMPERATURE
     )
+
+    # Enable MLflow autologging for DSPy
+    import mlflow
+    mlflow.set_tracking_uri(Config.MLFLOW_TRACKING_URI)
+    mlflow.dspy.autolog()
+
     dspy.configure(lm=agent_lm)
 
     # Configure separate LM for judge

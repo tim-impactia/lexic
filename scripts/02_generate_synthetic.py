@@ -25,6 +25,12 @@ def main():
         temperature=Config.TEMPERATURE,
         max_tokens=8000  # Increase for generation
     )
+
+    # Enable MLflow autologging for DSPy
+    import mlflow
+    mlflow.set_tracking_uri(Config.MLFLOW_TRACKING_URI)
+    mlflow.dspy.autolog()
+
     dspy.configure(lm=lm)
 
     print("=" * 60)
