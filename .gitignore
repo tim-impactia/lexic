@@ -1,0 +1,78 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# PyCharm
+.idea/
+
+# VSCode
+.vscode/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Environment variables
+.env
+.env.local
+
+# Data directories
+data/court_decisions/*/
+data/synthetic_cases/*/
+data/eval_runs/*/
+mlruns/
+mlartifacts/
+*.db
+
+# Allow example data structure
+!data/court_decisions/.gitkeep
+!data/synthetic_cases/.gitkeep
+!data/eval_runs/.gitkeep
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+.hypothesis/
+.tox/
+
+# OS
+.DS_Store
+Thumbs.db
+*~
+.swp
+.swo
+
+# Logs
+*.log
+
+# Docker
+*.pid
