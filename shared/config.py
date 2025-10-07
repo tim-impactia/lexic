@@ -29,6 +29,8 @@ class Config:
 
     # MLFlow Configuration
     MLFLOW_TRACKING_URI: str = os.getenv("MLFLOW_TRACKING_URI", "http://localhost:5000")
+    MLFLOW_BACKEND_STORE_URI: str = os.getenv("MLFLOW_BACKEND_STORE_URI", f"sqlite:///{PROJECT_ROOT}/mlruns/mlflow.db")
+    MLFLOW_ARTIFACT_ROOT: str = os.getenv("MLFLOW_ARTIFACT_ROOT", str(PROJECT_ROOT / "mlruns"))
     MLFLOW_EXPERIMENT_NAME: str = os.getenv("MLFLOW_EXPERIMENT_NAME", "lexic-evaluation")
 
     # Evaluation Configuration
