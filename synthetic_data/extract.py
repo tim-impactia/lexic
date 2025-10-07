@@ -13,14 +13,17 @@ class ExtractAllElements(dspy.Signature):
     """
     Extraire tous les éléments structurés de la décision judiciaire en un seul passage.
     IMPORTANT: Répondre entièrement en français.
+
+    Si c'est une décision d'appel: extraire les faits et arguments du litige ORIGINAL (première instance),
+    pas ceux spécifiques à l'appel. Remonter au conflit initial avant tout jugement.
     """
     full_text: str = dspy.InputField(desc="Texte intégral de la décision judiciaire")
-    parties: str = dspy.OutputField(desc="Liste des parties impliquées (demandeur, défendeur, etc.) - une par ligne. Répondre en français.")
-    facts_timeline: str = dspy.OutputField(desc="Liste chronologique des faits et événements clés - un par ligne. Répondre en français.")
-    legal_bases: str = dspy.OutputField(desc="Dispositions légales citées (article, loi, contenu, pertinence) en markdown structuré. Répondre en français.")
-    arguments: str = dspy.OutputField(desc="Arguments juridiques présentés (thèse, bases légales, support factuel, raisonnement) en markdown structuré. Répondre en français.")
-    considerations: str = dspy.OutputField(desc="Considérations juridiques du tribunal (question, analyse, conclusion, confiance) en markdown structuré. Répondre en français.")
-    judgment: str = dspy.OutputField(desc="Jugement final (décision, raisonnement, bases légales) en markdown structuré. Répondre en français.")
+    parties: str = dspy.OutputField(desc="Liste des parties impliquées dans le litige ORIGINAL (demandeur, défendeur, etc.) - une par ligne. Si appel, identifier les parties du litige initial, pas leur rôle d'appelant/intimé. Répondre en français.")
+    facts_timeline: str = dspy.OutputField(desc="Liste chronologique des faits du LITIGE ORIGINAL avant tout jugement - un par ligne. Si appel, exclure les faits post-jugement première instance (l'appel lui-même, etc.). Répondre en français.")
+    legal_bases: str = dspy.OutputField(desc="Dispositions légales applicables au litige original (article, loi, contenu, pertinence) en markdown structuré. Si appel, inclure ce qui aurait été pertinent en première instance. Répondre en français.")
+    arguments: str = dspy.OutputField(desc="Arguments juridiques du litige original (thèse, bases légales, support factuel, raisonnement) en markdown structuré. Si appel, reconstruire les arguments de première instance, pas uniquement ceux d'appel. Répondre en français.")
+    considerations: str = dspy.OutputField(desc="Considérations juridiques finales du tribunal (question, analyse, conclusion, confiance) en markdown structuré. Peut inclure insights d'appel sur ce qui aurait dû être considéré. Répondre en français.")
+    judgment: str = dspy.OutputField(desc="Jugement final (décision finale après appel si applicable, raisonnement, bases légales) en markdown structuré. Répondre en français.")
 
 
 class CourtDecisionExtractor(dspy.Module):

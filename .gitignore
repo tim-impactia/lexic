@@ -49,6 +49,7 @@ data/synthetic_cases/*/
 data/eval_runs/*/
 mlruns/
 mlartifacts/
+backup/
 *.db
 
 # Allow example data structure
