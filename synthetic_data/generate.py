@@ -14,71 +14,117 @@ from shared.config import Config
 
 
 class GenerateClientPersona(dspy.Signature):
-    """Générer le persona du client qui aurait mené à cette décision de justice. IMPORTANT: Répondre en français."""
-    decision_context: str = dspy.InputField(desc="Faits, parties et issue de la décision de justice")
+    """
+    Générer le persona du client qui aurait mené à cette décision de justice.
+    IMPORTANT: Répondre en français.
+
+    Si c'est un appel: Imaginer le client AVANT le premier jugement, pas après.
+    Le client vient consulter AVANT toute procédure judiciaire.
+    """
+    decision_context: str = dspy.InputField(desc="Faits, parties et issue de la décision de justice. Si appel, se concentrer sur le litige ORIGINAL avant tout jugement.")
     party_role: str = dspy.InputField(desc="Rôle de la partie: 'demandeur' (plaintiff) ou 'défendeur' (defendant)")
-    client_persona: str = dspy.OutputField(desc="Persona du client en français (nom, contexte, résumé de situation, état émotionnel, objectifs, contraintes). Adapter au rôle: demandeur cherche réparation/gain, défendeur cherche à se défendre/éviter perte.")
+    client_persona: str = dspy.OutputField(desc="Persona du client en français (nom, contexte, résumé de situation, état émotionnel, objectifs, contraintes). Adapter au rôle: demandeur cherche réparation/gain, défendeur cherche à se défendre/éviter perte. Si appel, le client vient AVANT tout jugement.")
 
 
 class GenerateClientRequest(dspy.Signature):
-    """Générer une demande client réaliste telle qu'il l'écrirait. IMPORTANT: Répondre en français."""
+    """
+    Générer une demande client réaliste telle qu'il l'écrirait.
+    IMPORTANT: Répondre en français.
+
+    Si appel: Le client vient consulter AVANT tout jugement, pas après.
+    """
     client_persona: str = dspy.InputField(desc="Persona du client avec contexte, état émotionnel, style de communication")
-    decision_context: str = dspy.InputField(desc="Faits et chronologie de la décision")
+    decision_context: str = dspy.InputField(desc="Faits et chronologie de la décision. Si appel, ignorer les faits post-jugement.")
     party_role: str = dspy.InputField(desc="Rôle de la partie: 'demandeur' ou 'défendeur'")
-    client_request: str = dspy.OutputField(desc="Demande/email/message initial du client en français, dans sa voix, avec son niveau de détail et d'émotion. Adapter au rôle: demandeur demande aide pour obtenir réparation, défendeur demande aide pour se défendre. Doit refléter son persona.")
+    client_request: str = dspy.OutputField(desc="Demande/email/message initial du client en français, dans sa voix, avec son niveau de détail et d'émotion. Adapter au rôle: demandeur demande aide pour obtenir réparation, défendeur demande aide pour se défendre. Doit refléter son persona. Si appel, le client vient AVANT tout jugement.")
 
 
 class GenerateInitialFacts(dspy.Signature):
-    """Générer les faits initiaux que le client aurait connus lors de la prise de contact. IMPORTANT: Répondre en français."""
-    decision_context: str = dspy.InputField(desc="Faits et chronologie de la décision")
+    """
+    Générer les faits initiaux que le client aurait connus lors de la prise de contact.
+    IMPORTANT: Répondre en français.
+
+    Si appel: Faits connus AVANT tout jugement, pas après. Exclure tout ce qui concerne la procédure judiciaire.
+    """
+    decision_context: str = dspy.InputField(desc="Faits et chronologie de la décision. Si appel, exclure les faits post-jugement de première instance.")
     client_persona: str = dspy.InputField(desc="Persona du client")
     party_role: str = dspy.InputField(desc="Rôle de la partie: 'demandeur' ou 'défendeur'")
-    initial_facts: str = dspy.OutputField(desc="Faits initiaux en français (résumé, chronologie, documents fournis, incertitudes). Perspective selon le rôle: demandeur connaît les faits qui motivent sa demande, défendeur connaît les faits pour sa défense.")
+    initial_facts: str = dspy.OutputField(desc="Faits initiaux en français (résumé, chronologie, documents fournis, incertitudes). Perspective selon le rôle: demandeur connaît les faits qui motivent sa demande, défendeur connaît les faits pour sa défense. Si appel, UNIQUEMENT les faits du litige original, AVANT tout jugement.")
 
 
 class GenerateSituation(dspy.Signature):
-    """Générer le rapport de qualification/situation. IMPORTANT: Répondre en français."""
+    """
+    Générer le rapport de qualification/situation.
+    IMPORTANT: Répondre en français.
+
+    Si appel: Situation AVANT tout jugement. Le client cherche à préparer sa position initiale, pas à faire appel.
+    """
     client_persona: str = dspy.InputField(desc="Persona du client")
     initial_facts: str = dspy.InputField(desc="Faits initiaux")
-    decision_context: str = dspy.InputField(desc="Décision de justice pour contexte")
-    situation: str = dspy.OutputField(desc="Rapport de situation en français (résumé, objectifs, contraintes, questions juridiques)")
+    decision_context: str = dspy.InputField(desc="Décision de justice pour contexte. Si appel, se concentrer sur le litige original.")
+    situation: str = dspy.OutputField(desc="Rapport de situation en français (résumé, objectifs, contraintes, questions juridiques). Si appel, objectifs du litige ORIGINAL, pas de l'appel.")
 
 
 class GenerateInitialAnalysis(dspy.Signature):
-    """Générer l'analyse juridique initiale. IMPORTANT: Répondre en français."""
+    """
+    Générer l'analyse juridique initiale.
+    IMPORTANT: Répondre en français.
+
+    Si appel: Analyse pour le litige ORIGINAL, comme si c'était la première consultation.
+    """
     situation: str = dspy.InputField(desc="Rapport de situation")
-    decision_legal_bases: str = dspy.InputField(desc="Bases légales de la décision")
-    initial_analysis: str = dspy.OutputField(desc="Analyse initiale en français (domaine juridique, bases légales potentielles, évaluation préliminaire, besoins d'investigation, complexité)")
+    decision_legal_bases: str = dspy.InputField(desc="Bases légales de la décision (du litige original si appel)")
+    initial_analysis: str = dspy.OutputField(desc="Analyse initiale en français (domaine juridique, bases légales potentielles, évaluation préliminaire, besoins d'investigation, complexité). Si appel, analyser le litige ORIGINAL.")
 
 
 class GenerateInvestigationOrder(dspy.Signature):
-    """Générer l'ordre d'investigation. IMPORTANT: Répondre en français."""
+    """
+    Générer l'ordre d'investigation.
+    IMPORTANT: Répondre en français.
+
+    Si appel: Investigation pour préparer le dossier du litige ORIGINAL.
+    """
     initial_analysis: str = dspy.InputField(desc="Analyse juridique initiale")
-    decision_facts: str = dspy.InputField(desc="Faits de la décision")
-    investigation_order: str = dspy.OutputField(desc="Ordre d'investigation en français (objectif, questions, documents demandés)")
+    decision_facts: str = dspy.InputField(desc="Faits de la décision. Si appel, faits du litige ORIGINAL uniquement.")
+    investigation_order: str = dspy.OutputField(desc="Ordre d'investigation en français (objectif, questions, documents demandés). Si appel, chercher les éléments pour préparer le litige ORIGINAL.")
 
 
 class GenerateInvestigationReport(dspy.Signature):
-    """Générer le rapport d'investigation du client. IMPORTANT: Répondre en français."""
+    """
+    Générer le rapport d'investigation du client.
+    IMPORTANT: Répondre en français.
+
+    Si appel: Rapport du client avec les faits du litige ORIGINAL.
+    """
     investigation_order: str = dspy.InputField(desc="Ordre d'investigation")
-    decision_facts: str = dspy.InputField(desc="Faits de la décision")
-    investigation_report: str = dspy.OutputField(desc="Rapport d'investigation en français (réponses, documents obtenus, lacunes restantes)")
+    decision_facts: str = dspy.InputField(desc="Faits de la décision. Si appel, faits du litige ORIGINAL uniquement.")
+    investigation_report: str = dspy.OutputField(desc="Rapport d'investigation en français (réponses, documents obtenus, lacunes restantes). Si appel, uniquement les faits du litige ORIGINAL.")
 
 
 class GenerateFactualRecord(dspy.Signature):
-    """Générer le dossier factuel. IMPORTANT: Répondre en français."""
+    """
+    Générer le dossier factuel.
+    IMPORTANT: Répondre en français.
+
+    Si appel: Dossier factuel du litige ORIGINAL, AVANT tout jugement.
+    """
     initial_facts: str = dspy.InputField(desc="Faits initiaux")
     investigation_report: str = dspy.InputField(desc="Rapport d'investigation")
-    decision_facts: str = dspy.InputField(desc="Faits de la décision")
-    factual_record: str = dspy.OutputField(desc="Dossier factuel en français (résumé, parties, chronologie, faits clés, preuves)")
+    decision_facts: str = dspy.InputField(desc="Faits de la décision. Si appel, faits du litige ORIGINAL uniquement.")
+    factual_record: str = dspy.OutputField(desc="Dossier factuel en français (résumé, parties, chronologie, faits clés, preuves). Si appel, UNIQUEMENT les faits du litige ORIGINAL, AVANT tout jugement.")
 
 
 class GenerateRecommendations(dspy.Signature):
-    """Générer les recommandations au client. IMPORTANT: Répondre en français."""
-    judgment: str = dspy.InputField(desc="Jugement du tribunal")
-    considerations: str = dspy.InputField(desc="Legal considerations")
-    client_objectives: str = dspy.InputField(desc="Objectifs du client")
-    recommendations: str = dspy.OutputField(desc="Recommandations en français (action, justification, risques, alternatives, prochaines étapes)")
+    """
+    Générer les recommandations au client.
+    IMPORTANT: Répondre en français.
+
+    Si appel: Recommandations basées sur le jugement FINAL (après appel), mais adaptées aux objectifs du litige ORIGINAL.
+    """
+    judgment: str = dspy.InputField(desc="Jugement du tribunal (final après appel si applicable)")
+    considerations: str = dspy.InputField(desc="Considérations juridiques")
+    client_objectives: str = dspy.InputField(desc="Objectifs du client (du litige original si appel)")
+    recommendations: str = dspy.OutputField(desc="Recommandations en français (action, justification, risques, alternatives, prochaines étapes). Basées sur le jugement final mais en lien avec les objectifs originaux du client.")
 
 
 class SyntheticCaseGenerator(dspy.Module):
