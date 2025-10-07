@@ -23,7 +23,8 @@ def main():
     lm = dspy.LM(
         model=f"anthropic/{Config.EXTRACTION_MODEL}",
         api_key=Config.ANTHROPIC_API_KEY,
-        temperature=Config.TEMPERATURE
+        temperature=Config.TEMPERATURE,
+        max_tokens=24000  # Increase for generation
     )
 
     # Enable MLflow autologging for DSPy

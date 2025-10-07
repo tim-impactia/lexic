@@ -23,7 +23,7 @@ def main():
         model=f"anthropic/{Config.GENERATION_MODEL}",
         api_key=Config.ANTHROPIC_API_KEY,
         temperature=Config.TEMPERATURE,
-        max_tokens=8000  # Increase for generation
+        max_tokens=24000  # Increase for generation
     )
 
     # Enable MLflow autologging for DSPy
