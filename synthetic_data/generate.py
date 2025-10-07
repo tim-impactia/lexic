@@ -16,21 +16,24 @@ from shared.config import Config
 class GenerateClientPersona(dspy.Signature):
     """Générer le persona du client qui aurait mené à cette décision de justice. IMPORTANT: Répondre en français."""
     decision_context: str = dspy.InputField(desc="Faits, parties et issue de la décision de justice")
-    client_persona: str = dspy.OutputField(desc="Persona du client en français (nom, contexte, résumé de situation, état émotionnel, objectifs, contraintes)")
+    party_role: str = dspy.InputField(desc="Rôle de la partie: 'demandeur' (plaintiff) ou 'défendeur' (defendant)")
+    client_persona: str = dspy.OutputField(desc="Persona du client en français (nom, contexte, résumé de situation, état émotionnel, objectifs, contraintes). Adapter au rôle: demandeur cherche réparation/gain, défendeur cherche à se défendre/éviter perte.")
 
 
 class GenerateClientRequest(dspy.Signature):
     """Générer une demande client réaliste telle qu'il l'écrirait. IMPORTANT: Répondre en français."""
     client_persona: str = dspy.InputField(desc="Persona du client avec contexte, état émotionnel, style de communication")
     decision_context: str = dspy.InputField(desc="Faits et chronologie de la décision")
-    client_request: str = dspy.OutputField(desc="Demande/email/message initial du client en français, dans sa voix, avec son niveau de détail et d'émotion. Doit refléter son persona (ex: professionnel = plus structuré, client émotionnel = moins organisé)")
+    party_role: str = dspy.InputField(desc="Rôle de la partie: 'demandeur' ou 'défendeur'")
+    client_request: str = dspy.OutputField(desc="Demande/email/message initial du client en français, dans sa voix, avec son niveau de détail et d'émotion. Adapter au rôle: demandeur demande aide pour obtenir réparation, défendeur demande aide pour se défendre. Doit refléter son persona.")
 
 
 class GenerateInitialFacts(dspy.Signature):
     """Générer les faits initiaux que le client aurait connus lors de la prise de contact. IMPORTANT: Répondre en français."""
     decision_context: str = dspy.InputField(desc="Faits et chronologie de la décision")
     client_persona: str = dspy.InputField(desc="Persona du client")
-    initial_facts: str = dspy.OutputField(desc="Faits initiaux en français (résumé, chronologie, documents fournis, incertitudes)")
+    party_role: str = dspy.InputField(desc="Rôle de la partie: 'demandeur' ou 'défendeur'")
+    initial_facts: str = dspy.OutputField(desc="Faits initiaux en français (résumé, chronologie, documents fournis, incertitudes). Perspective selon le rôle: demandeur connaît les faits qui motivent sa demande, défendeur connaît les faits pour sa défense.")
 
 
 class GenerateSituation(dspy.Signature):
@@ -212,14 +215,15 @@ def load_decision_data(decision_dir: Path) -> dict:
     }
 
 
-def generate_synthetic_case(decision_id: str, case_id: str, decisions_dir: Path, output_dir: Path):
+def generate_synthetic_case(decision_id: str, case_id: str, party_role: str, decisions_dir: Path, output_dir: Path):
     """
-    Generate a synthetic case from a court decision.
+    Generate a synthetic case from a court decision for a specific party.
     Saves files incrementally and skips steps that already exist.
 
     Args:
         decision_id: ID of the source court decision
-        case_id: ID for the synthetic case
+        case_id: ID for the synthetic case (e.g., 'case_001_pl' or 'case_001_df')
+        party_role: Role of the party - 'demandeur' (plaintiff) or 'défendeur' (defendant)
         decisions_dir: Directory containing court decisions
         output_dir: Directory to save synthetic case
     """
@@ -268,14 +272,18 @@ def generate_synthetic_case(decision_id: str, case_id: str, decisions_dir: Path,
     # Generate and save incrementally
     client_persona = save_if_missing(
         "01_client_persona.md", "Client Persona", "",
-        lambda: generator.gen_persona(decision_context=decision_context).client_persona
+        lambda: generator.gen_persona(
+            decision_context=decision_context,
+            party_role=party_role
+        ).client_persona
     )
 
     client_request = save_if_missing(
         "01b_client_request.md", "Client Request", "",
         lambda: generator.gen_client_request(
             client_persona=client_persona,
-            decision_context=decision_context
+            decision_context=decision_context,
+            party_role=party_role
         ).client_request
     )
 
@@ -283,7 +291,8 @@ def generate_synthetic_case(decision_id: str, case_id: str, decisions_dir: Path,
         "02_initial_facts_known.md", "Initial Facts", "",
         lambda: generator.gen_initial_facts(
             decision_context=decision_data['facts_timeline'],
-            client_persona=client_persona
+            client_persona=client_persona,
+            party_role=party_role
         ).initial_facts
     )
 
@@ -373,17 +382,27 @@ def generate_all_synthetic_cases(decisions_dir: Path, output_dir: Path):
         return
 
     print(f"Found {len(decision_ids)} decisions")
+    print(f"Generating 2 synthetic cases per decision (plaintiff + defendant)")
 
     for i, decision_id in enumerate(decision_ids, 1):
-        case_id = f"case_{i:03d}"
+        base_case_id = f"case_{i:03d}"
 
-        # Check if already generated
-        case_dir = output_dir / case_id
-        if case_dir.exists() and (case_dir / "metadata.md").exists():
-            print(f"Skipping {case_id} (already generated)")
-            continue
-
+        # Generate plaintiff case
+        case_id_pl = f"{base_case_id}_pl"
+        print(f"\n{'='*60}")
+        print(f"Generating plaintiff case: {case_id_pl}")
+        print(f"{'='*60}")
         try:
-            generate_synthetic_case(decision_id, case_id, decisions_dir, output_dir)
+            generate_synthetic_case(decision_id, case_id_pl, "demandeur", decisions_dir, output_dir)
         except Exception as e:
-            print(f"✗ Error generating case from {decision_id}: {e}")
+            print(f"✗ Error generating plaintiff case from {decision_id}: {e}")
+
+        # Generate defendant case
+        case_id_df = f"{base_case_id}_df"
+        print(f"\n{'='*60}")
+        print(f"Generating defendant case: {case_id_df}")
+        print(f"{'='*60}")
+        try:
+            generate_synthetic_case(decision_id, case_id_df, "défendeur", decisions_dir, output_dir)
+        except Exception as e:
+            print(f"✗ Error generating defendant case from {decision_id}: {e}")
