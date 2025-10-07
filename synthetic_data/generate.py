@@ -215,6 +215,7 @@ def load_decision_data(decision_dir: Path) -> dict:
 def generate_synthetic_case(decision_id: str, case_id: str, decisions_dir: Path, output_dir: Path):
     """
     Generate a synthetic case from a court decision.
+    Saves files incrementally and skips steps that already exist.
 
     Args:
         decision_id: ID of the source court decision
@@ -228,12 +229,7 @@ def generate_synthetic_case(decision_id: str, case_id: str, decisions_dir: Path,
     print(f"Loading decision {decision_id}...")
     decision_data = load_decision_data(decision_dir)
 
-    # Generate synthetic case
-    print(f"Generating synthetic case {case_id}...")
-    generator = SyntheticCaseGenerator()
-    result = generator(decision_data=decision_data)
-
-    # Save synthetic case
+    # Prepare output directory
     case_dir = output_dir / case_id
     case_dir.mkdir(parents=True, exist_ok=True)
 
@@ -244,24 +240,120 @@ def generate_synthetic_case(decision_id: str, case_id: str, decisions_dir: Path,
         "model": Config.GENERATION_MODEL
     }
 
-    # Save each step
-    write_markdown(case_dir / "metadata.md", metadata, f"# Case Metadata\n\nSource: {decision_id}")
-    write_markdown(case_dir / "01_client_persona.md", metadata, f"# Client Persona\n\n{result.client_persona}")
-    write_markdown(case_dir / "01b_client_request.md", metadata, f"# Client Request\n\n{result.client_request}")
-    write_markdown(case_dir / "02_initial_facts_known.md", metadata, f"# Initial Facts\n\n{result.initial_facts}")
-    write_markdown(case_dir / "03_gt_situation.md", metadata, f"# Ground Truth: Situation\n\n{result.situation}")
-    write_markdown(case_dir / "04_gt_initial_analysis.md", metadata, f"# Ground Truth: Initial Analysis\n\n{result.initial_analysis}")
-    write_markdown(case_dir / "05_gt_investigation_order_1.md", metadata, f"# Ground Truth: Investigation Order\n\n{result.investigation_order}")
-    write_markdown(case_dir / "06_gt_investigation_report_1.md", metadata, f"# Ground Truth: Investigation Report\n\n{result.investigation_report}")
-    write_markdown(case_dir / "09_gt_initial_factual_record.md", metadata, f"# Ground Truth: Initial Factual Record\n\n{result.initial_factual_record}")
-    write_markdown(case_dir / "10_gt_final_factual_record.md", metadata, f"# Ground Truth: Final Factual Record\n\n{result.final_factual_record}")
-    write_markdown(case_dir / "11_gt_applicable_legal_bases.md", metadata, f"# Ground Truth: Legal Bases\n\n{decision_data['legal_bases']}")
-    write_markdown(case_dir / "12_gt_legal_arguments.md", metadata, f"# Ground Truth: Legal Arguments\n\n{decision_data['arguments']}")
-    write_markdown(case_dir / "13_gt_considerations.md", metadata, f"# Ground Truth: Considerations\n\n{decision_data['considerations']}")
-    write_markdown(case_dir / "14_gt_judgment.md", metadata, f"# Ground Truth: Judgment\n\n{decision_data['judgment']}")
-    write_markdown(case_dir / "15_gt_recommendations.md", metadata, f"# Ground Truth: Recommendations\n\n{result.recommendations}")
+    # Helper to check and save
+    def save_if_missing(filename: str, title: str, content: str, generator_func=None):
+        """Save file if it doesn't exist, otherwise load existing content."""
+        filepath = case_dir / filename
+        if filepath.exists():
+            print(f"  ✓ {title} (already exists)")
+            _, existing_content = read_markdown(filepath)
+            return existing_content
+        else:
+            if generator_func:
+                print(f"  Generating {title.lower()}...")
+                content = generator_func()
+            write_markdown(filepath, metadata, f"# {title}\n\n{content}")
+            print(f"  ✓ {title} (saved)")
+            return content
 
-    print(f"✓ Generated synthetic case at {case_dir}")
+    print(f"Generating synthetic case {case_id}...")
+
+    # Initialize generator
+    generator = SyntheticCaseGenerator()
+    decision_context = f"{decision_data['parties']}\n\n{decision_data['facts_timeline']}\n\n{decision_data['judgment']}"
+
+    # Save metadata
+    save_if_missing("metadata.md", "Case Metadata", f"Source: {decision_id}")
+
+    # Generate and save incrementally
+    client_persona = save_if_missing(
+        "01_client_persona.md", "Client Persona", "",
+        lambda: generator.gen_persona(decision_context=decision_context).client_persona
+    )
+
+    client_request = save_if_missing(
+        "01b_client_request.md", "Client Request", "",
+        lambda: generator.gen_client_request(
+            client_persona=client_persona,
+            decision_context=decision_context
+        ).client_request
+    )
+
+    initial_facts = save_if_missing(
+        "02_initial_facts_known.md", "Initial Facts", "",
+        lambda: generator.gen_initial_facts(
+            decision_context=decision_data['facts_timeline'],
+            client_persona=client_persona
+        ).initial_facts
+    )
+
+    situation = save_if_missing(
+        "03_gt_situation.md", "Ground Truth: Situation", "",
+        lambda: generator.gen_situation(
+            client_persona=client_persona,
+            initial_facts=initial_facts,
+            decision_context=decision_context
+        ).situation
+    )
+
+    initial_analysis = save_if_missing(
+        "04_gt_initial_analysis.md", "Ground Truth: Initial Analysis", "",
+        lambda: generator.gen_initial_analysis(
+            situation=situation,
+            decision_legal_bases=decision_data['legal_bases']
+        ).initial_analysis
+    )
+
+    investigation_order = save_if_missing(
+        "05_gt_investigation_order_1.md", "Ground Truth: Investigation Order", "",
+        lambda: generator.gen_investigation_order(
+            initial_analysis=initial_analysis,
+            decision_facts=decision_data['facts_timeline']
+        ).investigation_order
+    )
+
+    investigation_report = save_if_missing(
+        "06_gt_investigation_report_1.md", "Ground Truth: Investigation Report", "",
+        lambda: generator.gen_investigation_report(
+            investigation_order=investigation_order,
+            decision_facts=decision_data['facts_timeline']
+        ).investigation_report
+    )
+
+    initial_factual_record = save_if_missing(
+        "09_gt_initial_factual_record.md", "Ground Truth: Initial Factual Record", "",
+        lambda: generator.gen_initial_factual_record(
+            initial_facts=initial_facts,
+            investigation_report="",
+            decision_facts=decision_data['facts_timeline']
+        ).factual_record
+    )
+
+    final_factual_record = save_if_missing(
+        "10_gt_final_factual_record.md", "Ground Truth: Final Factual Record", "",
+        lambda: generator.gen_final_factual_record(
+            initial_facts=initial_facts,
+            investigation_report=investigation_report,
+            decision_facts=decision_data['facts_timeline']
+        ).factual_record
+    )
+
+    # Copy decision data (these don't need generation)
+    save_if_missing("11_gt_applicable_legal_bases.md", "Ground Truth: Legal Bases", decision_data['legal_bases'])
+    save_if_missing("12_gt_legal_arguments.md", "Ground Truth: Legal Arguments", decision_data['arguments'])
+    save_if_missing("13_gt_considerations.md", "Ground Truth: Considerations", decision_data['considerations'])
+    save_if_missing("14_gt_judgment.md", "Ground Truth: Judgment", decision_data['judgment'])
+
+    recommendations = save_if_missing(
+        "15_gt_recommendations.md", "Ground Truth: Recommendations", "",
+        lambda: generator.gen_recommendations(
+            judgment=decision_data['judgment'],
+            considerations=decision_data['considerations'],
+            client_objectives=situation
+        ).recommendations
+    )
+
+    print(f"✓ Synthetic case complete at {case_dir}")
 
 
 def generate_all_synthetic_cases(decisions_dir: Path, output_dir: Path):
