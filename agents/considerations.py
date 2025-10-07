@@ -5,22 +5,24 @@ import dspy
 
 class AnalyzeConsiderations(dspy.Signature):
     """
-    Analyze legal considerations from arguments and factual record.
+    Analyser les considérations juridiques à partir des arguments et de l'état de fait.
 
-    For each consideration, provide:
-    - Issue being considered
-    - Analysis of the issue
+    Pour chaque considération, fournir:
+    - Question examinée
+    - Analyse de la question
     - Conclusion
-    - Confidence level
+    - Niveau de confiance
+
+    IMPORTANT: Répondre entièrement en français.
     """
     arguments: str = dspy.InputField(
-        desc="Legal arguments"
+        desc="Arguments juridiques"
     )
     factual_record: str = dspy.InputField(
-        desc="Factual record"
+        desc="État de fait"
     )
     considerations: str = dspy.OutputField(
-        desc="Legal considerations, each with: issue, analysis, conclusion, confidence"
+        desc="Considérations juridiques, chacune avec: question, analyse, conclusion, niveau de confiance. Répondre entièrement en français."
     )
 
 

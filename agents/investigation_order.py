@@ -5,19 +5,21 @@ import dspy
 
 class CreateInvestigationOrder(dspy.Signature):
     """
-    Create an investigation order based on initial analysis.
+    Créer un ordre d'investigation basé sur l'analyse initiale.
 
-    Produces:
-    - Purpose of the investigation
-    - Questions for the client
-    - Documents to request
-    - Optional deadline
+    Produit:
+    - Objectif de l'investigation
+    - Questions pour le client
+    - Documents à demander
+    - Délai optionnel
+
+    IMPORTANT: Répondre entièrement en français.
     """
     initial_analysis: str = dspy.InputField(
-        desc="Initial legal analysis with investigation needs"
+        desc="Analyse juridique initiale avec les besoins d'investigation"
     )
     investigation_order: str = dspy.OutputField(
-        desc="Investigation order with: purpose, questions (bulleted), documents requested (bulleted)"
+        desc="Ordre d'investigation avec: objectif, questions (liste à puces), documents demandés (liste à puces). Répondre entièrement en français."
     )
 
 

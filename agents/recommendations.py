@@ -5,26 +5,28 @@ import dspy
 
 class GenerateRecommendations(dspy.Signature):
     """
-    Generate recommendations for the client.
+    Générer des recommandations pour le client.
 
-    For each recommendation, provide:
-    - Action to take
-    - Rationale
-    - Risks
+    Pour chaque recommandation, fournir:
+    - Action à entreprendre
+    - Justification
+    - Risques
     - Alternatives
-    - Next steps
+    - Prochaines étapes
+
+    IMPORTANT: Répondre entièrement en français.
     """
     considerations: str = dspy.InputField(
-        desc="Legal considerations"
+        desc="Considérations juridiques"
     )
     judgment: str = dspy.InputField(
-        desc="Legal judgment or expected outcome"
+        desc="Jugement juridique ou issue attendue"
     )
     client_objectives: str = dspy.InputField(
-        desc="Client objectives from situation report"
+        desc="Objectifs du client tirés du rapport de situation"
     )
     recommendations: str = dspy.OutputField(
-        desc="Recommendations, each with: action, rationale, risks (bulleted), alternatives (bulleted), next steps (bulleted)"
+        desc="Recommandations, chacune avec: action, justification, risques (liste à puces), alternatives (liste à puces), prochaines étapes (liste à puces). Répondre entièrement en français."
     )
 
 

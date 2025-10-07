@@ -5,22 +5,24 @@ import dspy
 
 class DevelopArguments(dspy.Signature):
     """
-    Develop legal arguments from factual record and legal bases.
+    Développer des arguments juridiques à partir de l'état de fait et des bases légales.
 
-    For each argument, provide:
-    - Thesis (main claim)
-    - Legal bases supporting the thesis
-    - Factual support
-    - Reasoning connecting facts to legal conclusion
+    Pour chaque argument, fournir:
+    - Thèse (prétention principale)
+    - Bases légales soutenant la thèse
+    - Soutien factuel
+    - Raisonnement reliant les faits à la conclusion juridique
+
+    IMPORTANT: Répondre entièrement en français.
     """
     factual_record: str = dspy.InputField(
-        desc="Factual record of the case"
+        desc="État de fait du cas"
     )
     legal_bases: str = dspy.InputField(
-        desc="Applicable legal provisions"
+        desc="Dispositions légales applicables"
     )
     arguments: str = dspy.OutputField(
-        desc="Legal arguments, each with: thesis, legal bases, factual support, reasoning"
+        desc="Arguments juridiques, chacun avec: thèse, bases légales, soutien factuel, raisonnement. Répondre entièrement en français."
     )
 
 

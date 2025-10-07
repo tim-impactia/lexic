@@ -5,19 +5,21 @@ import dspy
 
 class IdentifyLegalBases(dspy.Signature):
     """
-    Identify applicable legal bases from factual record.
+    Identifier les bases légales applicables à partir de l'état de fait.
 
-    For each legal basis, provide:
-    - Article/provision number
-    - Law name
-    - Content of the provision
-    - Relevance to the case
+    Pour chaque base légale, fournir:
+    - Numéro d'article/disposition
+    - Nom de la loi
+    - Contenu de la disposition
+    - Pertinence pour le cas
+
+    IMPORTANT: Répondre entièrement en français.
     """
     factual_record: str = dspy.InputField(
-        desc="Factual record of the case"
+        desc="État de fait du cas"
     )
     legal_bases: str = dspy.OutputField(
-        desc="Applicable legal bases, each with: article, law name, content, relevance"
+        desc="Bases légales applicables, chacune avec: article, nom de la loi, contenu, pertinence. Répondre entièrement en français."
     )
 
 

@@ -5,20 +5,22 @@ import dspy
 
 class PerformInitialAnalysis(dspy.Signature):
     """
-    Perform initial legal analysis based on client situation.
+    Effectuer une analyse juridique initiale basée sur la situation du client.
 
-    Produces:
-    - Legal domain identification
-    - Potential legal bases to investigate
-    - Preliminary assessment
-    - Investigation needs
-    - Complexity assessment
+    Produit:
+    - Identification du domaine juridique
+    - Bases légales potentielles à investiguer
+    - Évaluation préliminaire
+    - Besoins d'investigation
+    - Évaluation de la complexité
+
+    IMPORTANT: Répondre entièrement en français.
     """
     situation: str = dspy.InputField(
-        desc="Client situation: summary, objectives, constraints, legal questions"
+        desc="Situation du client: résumé, objectifs, contraintes, questions juridiques"
     )
     initial_analysis: str = dspy.OutputField(
-        desc="Structured analysis with: legal domain, potential legal bases (bulleted), preliminary assessment, investigation needs (bulleted), complexity assessment"
+        desc="Analyse structurée avec: domaine juridique, bases légales potentielles (liste à puces), évaluation préliminaire, besoins d'investigation (liste à puces), évaluation de la complexité. Répondre entièrement en français."
     )
 
 

@@ -5,23 +5,25 @@ import dspy
 
 class CreateFactualRecord(dspy.Signature):
     """
-    Create a structured factual record.
+    Créer un état de fait structuré.
 
-    Produces:
-    - Summary of facts
-    - Parties involved
-    - Chronological timeline
-    - Key facts
-    - Evidence available
+    Produit:
+    - Résumé des faits
+    - Parties impliquées
+    - Chronologie
+    - Faits clés
+    - Preuves disponibles
+
+    IMPORTANT: Répondre entièrement en français.
     """
     initial_facts: str = dspy.InputField(
-        desc="Initial facts from client intake"
+        desc="Faits initiaux de la prise de contact avec le client"
     )
     investigation_report: str = dspy.InputField(
-        desc="Investigation report with additional facts (empty if none)"
+        desc="Rapport d'investigation avec des faits supplémentaires (vide si aucun)"
     )
     factual_record: str = dspy.OutputField(
-        desc="Structured factual record with: summary, parties (bulleted), timeline (bulleted, chronological), key facts (bulleted), evidence (bulleted)"
+        desc="État de fait structuré avec: résumé, parties (liste à puces), chronologie (liste à puces, chronologique), faits clés (liste à puces), preuves (liste à puces). Répondre entièrement en français."
     )
 
 
