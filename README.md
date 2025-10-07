@@ -183,6 +183,3 @@ Edit `.env` to configure:
 - `MLFLOW_TRACKING_URI`: MLFlow server URL
 - `TEMPERATURE`: LLM temperature (default: 0.7)
 
-## License
-
-MIT
