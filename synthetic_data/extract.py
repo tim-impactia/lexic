@@ -9,6 +9,35 @@ from shared.io import write_markdown
 from shared.config import Config
 
 
+class CreateNameMapping(dspy.Signature):
+    """
+    Créer une table de correspondance pour remplacer TOUS les noms/entités anonymisés par des noms réalistes.
+    IMPORTANT: Répondre entièrement en français.
+
+    Analyser ATTENTIVEMENT le contexte pour:
+    1. Identifier TOUTES les entités anonymisées (personnes ET sociétés):
+       - Personnes: A._______, B._______, X._______, etc.
+       - Sociétés: [...] SA, [...] Sàrl, [...] GmbH, [...] AG, etc.
+
+    2. Déterminer le GENRE des personnes:
+       - Lire le contexte pour indices (Madame, Monsieur, elle, il, épouse, mari, etc.)
+       - Choisir des prénoms appropriés au genre identifié
+
+    3. Choisir des noms appropriés:
+       - Personnes physiques: Prénom + Nom (ex: Sophie Martin, Jean Dupont)
+       - Sociétés: Nom d'entreprise réaliste + forme juridique (ex: Menuiserie Léman Sàrl, Fiduciaire Genève SA)
+       - Utiliser des noms courants en Suisse romande/France
+
+    4. Remplacer EXACTEMENT le format trouvé:
+       - Pour "A._______" → remplacer par "Sophie Martin"
+       - Pour "[...] Sàrl" → remplacer par "Menuiserie Léman Sàrl" (garder la forme juridique)
+       - Pour "[...] SA" → remplacer par "Fiduciaire Genève SA"
+    """
+    parties: str = dspy.InputField(desc="Liste des parties avec leurs noms/entités anonymisés (personnes ET sociétés)")
+    context: str = dspy.InputField(desc="Contexte complet (faits, jugement) pour identifier le genre des personnes et le type d'activité des sociétés")
+    name_mapping: str = dspy.OutputField(desc="Table de correspondance COMPLÈTE (une par ligne, format: 'ANONYMISÉ: RÉEL'). Exemples:\nA._______: Sophie Martin\nB._______: Jean Dupont\n[...] Sàrl: Menuiserie Léman Sàrl\n[...] SA: Fiduciaire Genève SA\nINCLURE TOUTES les entités anonymisées trouvées.")
+
+
 class ExtractAllElements(dspy.Signature):
     """
     Extraire tous les éléments structurés de la décision judiciaire en un seul passage.
@@ -32,18 +61,52 @@ class CourtDecisionExtractor(dspy.Module):
     def __init__(self):
         super().__init__()
         self.extract_all = dspy.ChainOfThought(ExtractAllElements)
+        self.create_mapping = dspy.ChainOfThought(CreateNameMapping)
 
     def forward(self, full_text: str):
         """Extract all elements from court decision text in a single LLM call."""
         result = self.extract_all(full_text=full_text)
 
-        return dspy.Prediction(
+        # Create a single name mapping for consistency across all documents
+        print("  Creating name mapping...")
+        # Include more context to help identify gender and company types
+        context = f"Faits: {result.facts_timeline[:800]}\nJugement: {result.judgment[:800]}"
+
+        mapping_result = self.create_mapping(
             parties=result.parties,
-            facts_timeline=result.facts_timeline,
-            legal_bases=result.legal_bases,
-            arguments=result.arguments,
-            considerations=result.considerations,
-            judgment=result.judgment
+            context=context
+        )
+
+        # Parse the mapping into a dict
+        mapping = {}
+        for line in mapping_result.name_mapping.strip().split('\n'):
+            if ':' in line:
+                anon, real = line.split(':', 1)
+                mapping[anon.strip()] = real.strip()
+
+        print(f"  Name mapping created: {len(mapping)} entities")
+        for anon, real in mapping.items():
+            print(f"    {anon} → {real}")
+
+        # Apply mapping to all extracted elements
+        print("  Applying name mapping to all documents...")
+
+        def apply_mapping(text: str) -> str:
+            """Apply name mapping to text."""
+            result_text = text
+            # Sort by length descending to replace longer patterns first
+            # This prevents partial replacements (e.g., replacing "[...]" before "[...] Sàrl")
+            for anon, real in sorted(mapping.items(), key=lambda x: len(x[0]), reverse=True):
+                result_text = result_text.replace(anon, real)
+            return result_text
+
+        return dspy.Prediction(
+            parties=apply_mapping(result.parties),
+            facts_timeline=apply_mapping(result.facts_timeline),
+            legal_bases=apply_mapping(result.legal_bases),
+            arguments=apply_mapping(result.arguments),
+            considerations=apply_mapping(result.considerations),
+            judgment=apply_mapping(result.judgment)
         )
 
 
@@ -81,18 +144,24 @@ def extract_decision(doc_path: Path, output_dir: Path, decision_id: str):
     if full_text_path.exists():
         print(f"Loading existing full_text.md for {decision_id}...")
         from shared.io import read_markdown
-        metadata, full_text = read_markdown(full_text_path)
+        _, full_text = read_markdown(full_text_path)
     else:
         print(f"Converting {doc_path} to markdown...")
         full_text = document_to_markdown(doc_path)
 
-        # Save full text
-        metadata = {
+        # Save full text (no extraction_model since this is just Docling conversion)
+        full_text_metadata = {
             "decision_id": decision_id,
             "source_file": str(doc_path),
-            "extraction_model": Config.EXTRACTION_MODEL
         }
-        write_markdown(full_text_path, metadata, full_text)
+        write_markdown(full_text_path, full_text_metadata, full_text)
+
+    # Metadata for LLM-extracted elements (includes extraction_model)
+    metadata = {
+        "decision_id": decision_id,
+        "source_file": str(doc_path),
+        "extraction_model": Config.EXTRACTION_MODEL
+    }
 
     # Initialize extractor
     print("Extracting structured elements...")
