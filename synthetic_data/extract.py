@@ -10,14 +10,17 @@ from shared.config import Config
 
 
 class ExtractAllElements(dspy.Signature):
-    """Extract all structured elements from court decision in a single pass."""
-    full_text: str = dspy.InputField(desc="Full text of court decision")
-    parties: str = dspy.OutputField(desc="List of parties involved (plaintiff, defendant, etc.) - one per line")
-    facts_timeline: str = dspy.OutputField(desc="Chronological list of key facts and events - one per line")
-    legal_bases: str = dspy.OutputField(desc="Legal provisions cited (article, law, content, relevance) as structured markdown")
-    arguments: str = dspy.OutputField(desc="Legal arguments presented (thesis, legal bases, factual support, reasoning) as structured markdown")
-    considerations: str = dspy.OutputField(desc="Court's legal considerations (issue, analysis, conclusion, confidence) as structured markdown")
-    judgment: str = dspy.OutputField(desc="Final judgment (decision, reasoning, legal bases) as structured markdown")
+    """
+    Extraire tous les éléments structurés de la décision judiciaire en un seul passage.
+    IMPORTANT: Répondre entièrement en français.
+    """
+    full_text: str = dspy.InputField(desc="Texte intégral de la décision judiciaire")
+    parties: str = dspy.OutputField(desc="Liste des parties impliquées (demandeur, défendeur, etc.) - une par ligne. Répondre en français.")
+    facts_timeline: str = dspy.OutputField(desc="Liste chronologique des faits et événements clés - un par ligne. Répondre en français.")
+    legal_bases: str = dspy.OutputField(desc="Dispositions légales citées (article, loi, contenu, pertinence) en markdown structuré. Répondre en français.")
+    arguments: str = dspy.OutputField(desc="Arguments juridiques présentés (thèse, bases légales, support factuel, raisonnement) en markdown structuré. Répondre en français.")
+    considerations: str = dspy.OutputField(desc="Considérations juridiques du tribunal (question, analyse, conclusion, confiance) en markdown structuré. Répondre en français.")
+    judgment: str = dspy.OutputField(desc="Jugement final (décision, raisonnement, bases légales) en markdown structuré. Répondre en français.")
 
 
 class CourtDecisionExtractor(dspy.Module):
@@ -146,12 +149,6 @@ def extract_all_decisions(decisions_dir: Path):
     for doc_path in doc_files:
         # Generate decision ID from filename
         decision_id = doc_path.stem
-
-        # Check if already extracted
-        decision_dir = decisions_dir / decision_id
-        if decision_dir.exists() and (decision_dir / "full_text.md").exists():
-            print(f"Skipping {decision_id} (already extracted)")
-            continue
 
         try:
             extract_decision(doc_path, decisions_dir, decision_id)
