@@ -115,6 +115,9 @@ lexic/
 ## Available Evaluations
 
 ```bash
+# Run all pipeline steps
+python scripts/03_run_eval.py --step all
+
 # Qualification step
 python scripts/03_run_eval.py --step qualification
 
@@ -131,7 +134,7 @@ python scripts/03_run_eval.py --step legal_arguments
 python scripts/03_run_eval.py --step recommendations
 
 # Limit number of cases
-python scripts/03_run_eval.py --step qualification --n-cases 5
+python scripts/03_run_eval.py --step all --n-cases 5
 ```
 
 ## Docker Usage
