@@ -1,0 +1,18 @@
+description: |
+  Identifier les bases légales applicables à partir de l'état de fait.
+
+  Pour chaque base légale, fournir:
+  - Numéro d'article/disposition
+  - Nom de la loi
+  - Contenu de la disposition
+  - Pertinence pour le cas
+
+  IMPORTANT: Répondre entièrement en français.
+
+input_fields:
+  factual_record:
+    desc: "État de fait du cas"
+
+output_fields:
+  legal_bases:
+    desc: "Bases légales applicables, chacune avec: article, nom de la loi, contenu, pertinence. Répondre entièrement en français."

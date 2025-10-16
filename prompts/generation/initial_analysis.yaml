@@ -1,0 +1,15 @@
+description: |
+  Générer l'analyse juridique initiale.
+  IMPORTANT: Répondre en français.
+
+  Si appel: Analyse pour le litige ORIGINAL, comme si c'était la première consultation.
+
+input_fields:
+  situation:
+    desc: "Rapport de situation"
+  decision_legal_bases:
+    desc: "Bases légales de la décision (du litige original si appel)"
+
+output_fields:
+  initial_analysis:
+    desc: "Analyse initiale en français (domaine juridique, bases légales potentielles, évaluation préliminaire, besoins d'investigation, complexité). Si appel, analyser le litige ORIGINAL."

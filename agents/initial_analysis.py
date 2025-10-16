@@ -1,27 +1,10 @@
 """Initial analysis agent - produces initial legal analysis from situation."""
 
 import dspy
+from shared.prompts import create_signature
 
-
-class PerformInitialAnalysis(dspy.Signature):
-    """
-    Effectuer une analyse juridique initiale basée sur la situation du client.
-
-    Produit:
-    - Identification du domaine juridique
-    - Bases légales potentielles à investiguer
-    - Évaluation préliminaire
-    - Besoins d'investigation
-    - Évaluation de la complexité
-
-    IMPORTANT: Répondre entièrement en français.
-    """
-    situation: str = dspy.InputField(
-        desc="Situation du client: résumé, objectifs, contraintes, questions juridiques"
-    )
-    initial_analysis: str = dspy.OutputField(
-        desc="Analyse structurée avec: domaine juridique, bases légales potentielles (liste à puces), évaluation préliminaire, besoins d'investigation (liste à puces), évaluation de la complexité. Répondre entièrement en français."
-    )
+# Create signature from YAML
+PerformInitialAnalysis = create_signature("agents", "initial_analysis")
 
 
 class InitialAnalysisAgent(dspy.Module):

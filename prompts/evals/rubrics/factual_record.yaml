@@ -1,0 +1,52 @@
+step_name: factual_record
+
+dimensions:
+  - name: Factual_Completeness
+    description: Are all relevant facts included?
+    weight: 0.35
+    criteria:
+      1: Missing many critical facts
+      2: Missing several important facts
+      3: Most facts included, some gaps
+      4: Comprehensive with minor omissions
+      5: Fully comprehensive, all relevant facts included
+
+  - name: Factual_Accuracy
+    description: Are facts accurately represented?
+    weight: 0.3
+    criteria:
+      1: Multiple factual errors or misrepresentations
+      2: Several factual inaccuracies
+      3: Mostly accurate with minor errors
+      4: Accurate with negligible errors
+      5: Perfectly accurate, no errors
+
+  - name: Chronological_Order
+    description: Is the timeline properly organized chronologically?
+    weight: 0.15
+    criteria:
+      1: Timeline is poorly organized or non-chronological
+      2: Timeline has significant ordering issues
+      3: Timeline is mostly chronological with minor issues
+      4: Timeline is well-organized and chronological
+      5: Timeline is perfectly chronological and clear
+
+  - name: Evidence_Documentation
+    description: Is evidence properly documented?
+    weight: 0.15
+    criteria:
+      1: Evidence poorly documented or missing
+      2: Evidence documentation has gaps
+      3: Evidence adequately documented
+      4: Evidence well-documented
+      5: Evidence comprehensively and precisely documented
+
+  - name: Neutrality
+    description: Are facts presented neutrally without legal conclusions?
+    weight: 0.05
+    criteria:
+      1: Significant legal conclusions mixed with facts
+      2: Some legal conclusions in factual record
+      3: Mostly neutral with minor interpretations
+      4: Neutral with negligible interpretations
+      5: Perfectly neutral, facts only

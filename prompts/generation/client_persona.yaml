@@ -1,0 +1,16 @@
+description: |
+  Générer le persona du client qui aurait mené à cette décision de justice.
+  IMPORTANT: Répondre en français.
+
+  Si c'est un appel: Imaginer le client AVANT le premier jugement, pas après.
+  Le client vient consulter AVANT toute procédure judiciaire.
+
+input_fields:
+  decision_context:
+    desc: "Faits, parties et issue de la décision de justice. Si appel, se concentrer sur le litige ORIGINAL avant tout jugement."
+  party_role:
+    desc: "Rôle de la partie: 'demandeur' (plaintiff) ou 'défendeur' (defendant)"
+
+output_fields:
+  client_persona:
+    desc: "Persona du client en français (nom, contexte, résumé de situation, état émotionnel, objectifs, contraintes). Adapter au rôle: demandeur cherche réparation/gain, défendeur cherche à se défendre/éviter perte. Si appel, le client vient AVANT tout jugement."

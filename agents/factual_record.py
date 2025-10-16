@@ -1,30 +1,10 @@
 """Factual record agent - creates structured factual records."""
 
 import dspy
+from shared.prompts import create_signature
 
-
-class CreateFactualRecord(dspy.Signature):
-    """
-    Créer un état de fait structuré.
-
-    Produit:
-    - Résumé des faits
-    - Parties impliquées
-    - Chronologie
-    - Faits clés
-    - Preuves disponibles
-
-    IMPORTANT: Répondre entièrement en français.
-    """
-    initial_facts: str = dspy.InputField(
-        desc="Faits initiaux de la prise de contact avec le client"
-    )
-    investigation_report: str = dspy.InputField(
-        desc="Rapport d'investigation avec des faits supplémentaires (vide si aucun)"
-    )
-    factual_record: str = dspy.OutputField(
-        desc="État de fait structuré avec: résumé, parties (liste à puces), chronologie (liste à puces, chronologique), faits clés (liste à puces), preuves (liste à puces). Répondre entièrement en français."
-    )
+# Create signature from YAML
+CreateFactualRecord = create_signature("agents", "factual_record")
 
 
 class FactualRecordAgent(dspy.Module):

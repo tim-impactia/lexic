@@ -2,26 +2,10 @@
 
 import dspy
 from shared.models import ClientPersona, InitialFacts, Situation
+from shared.prompts import create_signature
 
-
-class QualifyClientSituation(dspy.Signature):
-    """
-    Analyser la demande du client pour produire un rapport de qualification.
-
-    Le rapport de qualification capture:
-    - Résumé de la situation juridique du client
-    - Objectifs du client (ce qu'il souhaite accomplir)
-    - Contraintes (temps, budget, tolérance au risque)
-    - Questions juridiques à traiter
-
-    IMPORTANT: Répondre entièrement en français.
-    """
-    client_request: str = dspy.InputField(
-        desc="Demande/message initial du client tel qu'écrit par lui, reflétant son style de communication, son état émotionnel et son niveau de détail"
-    )
-    situation: str = dspy.OutputField(
-        desc="Rapport de situation structuré avec: résumé, objectifs (liste à puces), contraintes (liste à puces), questions juridiques (liste à puces). Répondre entièrement en français."
-    )
+# Create signature from YAML
+QualifyClientSituation = create_signature("agents", "qualification")
 
 
 class QualificationAgent(dspy.Module):

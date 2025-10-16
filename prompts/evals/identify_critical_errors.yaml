@@ -1,0 +1,15 @@
+description: |
+  Identifier les erreurs critiques dans la sortie de l'agent.
+  IMPORTANT: Répondre en français.
+
+input_fields:
+  prediction:
+    desc: "Sortie de l'agent"
+  ground_truth:
+    desc: "Référence vérité terrain"
+  rubric:
+    desc: "Grille d'évaluation"
+
+output_fields:
+  critical_errors:
+    desc: "Liste des erreurs critiques trouvées en français (liste vide si aucune)"

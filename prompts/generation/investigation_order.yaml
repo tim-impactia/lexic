@@ -1,0 +1,15 @@
+description: |
+  Générer l'ordre d'investigation.
+  IMPORTANT: Répondre en français.
+
+  Si appel: Investigation pour préparer le dossier du litige ORIGINAL.
+
+input_fields:
+  initial_analysis:
+    desc: "Analyse juridique initiale"
+  decision_facts:
+    desc: "Faits de la décision. Si appel, faits du litige ORIGINAL uniquement."
+
+output_fields:
+  investigation_order:
+    desc: "Ordre d'investigation en français (objectif, questions, documents demandés). Si appel, chercher les éléments pour préparer le litige ORIGINAL."

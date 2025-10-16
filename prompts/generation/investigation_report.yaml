@@ -1,0 +1,15 @@
+description: |
+  Générer le rapport d'investigation du client.
+  IMPORTANT: Répondre en français.
+
+  Si appel: Rapport du client avec les faits du litige ORIGINAL.
+
+input_fields:
+  investigation_order:
+    desc: "Ordre d'investigation"
+  decision_facts:
+    desc: "Faits de la décision. Si appel, faits du litige ORIGINAL uniquement."
+
+output_fields:
+  investigation_report:
+    desc: "Rapport d'investigation en français (réponses, documents obtenus, lacunes restantes). Si appel, uniquement les faits du litige ORIGINAL."

@@ -1,0 +1,52 @@
+step_name: recommendations
+
+dimensions:
+  - name: Actionability
+    description: Are recommendations clear and actionable?
+    weight: 0.3
+    criteria:
+      1: Recommendations are vague or not actionable
+      2: Recommendations are somewhat vague
+      3: Recommendations are adequately clear and actionable
+      4: Recommendations are clear and actionable
+      5: Recommendations are exceptionally clear, specific, and actionable
+
+  - name: Legal_Soundness
+    description: Are recommendations legally sound?
+    weight: 0.25
+    criteria:
+      1: Recommendations contain major legal errors
+      2: Recommendations have legal weaknesses
+      3: Recommendations are generally sound
+      4: Recommendations are legally sound
+      5: Recommendations are exceptionally sound and well-justified
+
+  - name: Risk_Assessment
+    description: Are risks properly identified and assessed?
+    weight: 0.2
+    criteria:
+      1: Risks poorly identified or assessed
+      2: Risk assessment has significant gaps
+      3: Risks adequately identified and assessed
+      4: Risks well-identified and assessed
+      5: Comprehensive and nuanced risk assessment
+
+  - name: Alignment_with_Objectives
+    description: Do recommendations align with client objectives?
+    weight: 0.15
+    criteria:
+      1: Recommendations poorly aligned with client objectives
+      2: Recommendations partially aligned with objectives
+      3: Recommendations adequately aligned with objectives
+      4: Recommendations well-aligned with objectives
+      5: Recommendations perfectly aligned and optimized for client objectives
+
+  - name: Alternatives_and_Next_Steps
+    description: Are alternatives and next steps well-articulated?
+    weight: 0.1
+    criteria:
+      1: Alternatives/next steps missing or unclear
+      2: Alternatives/next steps incomplete
+      3: Alternatives/next steps adequate
+      4: Alternatives/next steps well-articulated
+      5: Comprehensive alternatives with clear, strategic next steps

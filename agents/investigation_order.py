@@ -1,26 +1,10 @@
 """Investigation order agent - creates orders for client to gather information."""
 
 import dspy
+from shared.prompts import create_signature
 
-
-class CreateInvestigationOrder(dspy.Signature):
-    """
-    Créer un ordre d'investigation basé sur l'analyse initiale.
-
-    Produit:
-    - Objectif de l'investigation
-    - Questions pour le client
-    - Documents à demander
-    - Délai optionnel
-
-    IMPORTANT: Répondre entièrement en français.
-    """
-    initial_analysis: str = dspy.InputField(
-        desc="Analyse juridique initiale avec les besoins d'investigation"
-    )
-    investigation_order: str = dspy.OutputField(
-        desc="Ordre d'investigation avec: objectif, questions (liste à puces), documents demandés (liste à puces). Répondre entièrement en français."
-    )
+# Create signature from YAML
+CreateInvestigationOrder = create_signature("agents", "investigation_order")
 
 
 class InvestigationOrderAgent(dspy.Module):

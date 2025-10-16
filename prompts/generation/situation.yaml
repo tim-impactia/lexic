@@ -1,0 +1,17 @@
+description: |
+  Générer le rapport de qualification/situation.
+  IMPORTANT: Répondre en français.
+
+  Si appel: Situation AVANT tout jugement. Le client cherche à préparer sa position initiale, pas à faire appel.
+
+input_fields:
+  client_persona:
+    desc: "Persona du client"
+  initial_facts:
+    desc: "Faits initiaux"
+  decision_context:
+    desc: "Décision de justice pour contexte. Si appel, se concentrer sur le litige original."
+
+output_fields:
+  situation:
+    desc: "Rapport de situation en français (résumé, objectifs, contraintes, questions juridiques). Si appel, objectifs du litige ORIGINAL, pas de l'appel."

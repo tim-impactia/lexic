@@ -1,0 +1,21 @@
+description: |
+  Évaluer une dimension de la sortie de l'agent.
+  IMPORTANT: Répondre en français.
+
+input_fields:
+  dimension_name:
+    desc: "Nom de la dimension évaluée"
+  dimension_description:
+    desc: "Ce que cette dimension mesure"
+  scoring_criteria:
+    desc: "Critères de notation pour cette dimension (échelle 1-5)"
+  prediction:
+    desc: "Sortie de l'agent"
+  ground_truth:
+    desc: "Référence vérité terrain"
+
+output_fields:
+  score:
+    desc: "Score de 1 à 5"
+  explanation:
+    desc: "Explication en français pour le score"

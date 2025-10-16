@@ -1,0 +1,20 @@
+description: |
+  Analyser les considérations juridiques à partir des arguments et de l'état de fait.
+
+  Pour chaque considération, fournir:
+  - Question examinée
+  - Analyse de la question
+  - Conclusion
+  - Niveau de confiance
+
+  IMPORTANT: Répondre entièrement en français.
+
+input_fields:
+  arguments:
+    desc: "Arguments juridiques"
+  factual_record:
+    desc: "État de fait"
+
+output_fields:
+  considerations:
+    desc: "Considérations juridiques, chacune avec: question, analyse, conclusion, niveau de confiance. Répondre entièrement en français."

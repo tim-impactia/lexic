@@ -1,0 +1,52 @@
+step_name: legal_arguments
+
+dimensions:
+  - name: Legal_Soundness
+    description: Are the legal arguments legally sound?
+    weight: 0.35
+    criteria:
+      1: Arguments contain major legal errors
+      2: Arguments have significant legal weaknesses
+      3: Arguments are generally sound with minor issues
+      4: Arguments are sound and well-reasoned
+      5: Arguments are exceptionally sound and compelling
+
+  - name: Factual_Support
+    description: Are arguments well-supported by facts?
+    weight: 0.25
+    criteria:
+      1: Arguments lack factual support
+      2: Arguments have weak factual support
+      3: Arguments have adequate factual support
+      4: Arguments are well-supported by facts
+      5: Arguments have comprehensive and precise factual support
+
+  - name: Legal_Basis_Application
+    description: Are legal bases correctly applied?
+    weight: 0.25
+    criteria:
+      1: Legal bases misapplied or missing
+      2: Legal bases partially or imprecisely applied
+      3: Legal bases adequately applied
+      4: Legal bases well-applied
+      5: Legal bases expertly and precisely applied
+
+  - name: Reasoning_Quality
+    description: Is the reasoning connecting facts to conclusions clear and logical?
+    weight: 0.1
+    criteria:
+      1: Reasoning is unclear or illogical
+      2: Reasoning has significant gaps
+      3: Reasoning is adequate
+      4: Reasoning is clear and logical
+      5: Reasoning is exceptionally clear, logical, and persuasive
+
+  - name: Completeness
+    description: Are all relevant arguments presented?
+    weight: 0.05
+    criteria:
+      1: Missing most relevant arguments
+      2: Missing several important arguments
+      3: Most relevant arguments present
+      4: All important arguments present
+      5: Comprehensive presentation of all relevant arguments

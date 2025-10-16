@@ -4,25 +4,11 @@ import dspy
 from typing import Dict, List
 from evals.judges.rubrics import Rubric, get_rubric
 from shared.config import Config
+from shared.prompts import create_signature
 
-
-class EvaluateDimension(dspy.Signature):
-    """Évaluer une dimension de la sortie de l'agent. IMPORTANT: Répondre en français."""
-    dimension_name: str = dspy.InputField(desc="Nom de la dimension évaluée")
-    dimension_description: str = dspy.InputField(desc="Ce que cette dimension mesure")
-    scoring_criteria: str = dspy.InputField(desc="Critères de notation pour cette dimension (échelle 1-5)")
-    prediction: str = dspy.InputField(desc="Sortie de l'agent")
-    ground_truth: str = dspy.InputField(desc="Référence vérité terrain")
-    score: int = dspy.OutputField(desc="Score de 1 à 5")
-    explanation: str = dspy.OutputField(desc="Explication en français pour le score")
-
-
-class IdentifyCriticalErrors(dspy.Signature):
-    """Identifier les erreurs critiques dans la sortie de l'agent. IMPORTANT: Répondre en français."""
-    prediction: str = dspy.InputField(desc="Sortie de l'agent")
-    ground_truth: str = dspy.InputField(desc="Référence vérité terrain")
-    rubric: str = dspy.InputField(desc="Grille d'évaluation")
-    critical_errors: List[str] = dspy.OutputField(desc="Liste des erreurs critiques trouvées en français (liste vide si aucune)")
+# Create judge signatures from YAML
+EvaluateDimension = create_signature("evals", "evaluate_dimension")
+IdentifyCriticalErrors = create_signature("evals", "identify_critical_errors")
 
 
 class LexicJudge(dspy.Module):

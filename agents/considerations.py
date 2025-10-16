@@ -1,29 +1,10 @@
 """Consideration agent - analyzes legal considerations."""
 
 import dspy
+from shared.prompts import create_signature
 
-
-class AnalyzeConsiderations(dspy.Signature):
-    """
-    Analyser les considérations juridiques à partir des arguments et de l'état de fait.
-
-    Pour chaque considération, fournir:
-    - Question examinée
-    - Analyse de la question
-    - Conclusion
-    - Niveau de confiance
-
-    IMPORTANT: Répondre entièrement en français.
-    """
-    arguments: str = dspy.InputField(
-        desc="Arguments juridiques"
-    )
-    factual_record: str = dspy.InputField(
-        desc="État de fait"
-    )
-    considerations: str = dspy.OutputField(
-        desc="Considérations juridiques, chacune avec: question, analyse, conclusion, niveau de confiance. Répondre entièrement en français."
-    )
+# Create signature from YAML
+AnalyzeConsiderations = create_signature("agents", "considerations")
 
 
 class ConsiderationAgent(dspy.Module):

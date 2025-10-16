@@ -1,0 +1,18 @@
+description: |
+  Analyser la demande du client pour produire un rapport de qualification.
+
+  Le rapport de qualification capture:
+  - Résumé de la situation juridique du client
+  - Objectifs du client (ce qu'il souhaite accomplir)
+  - Contraintes (temps, budget, tolérance au risque)
+  - Questions juridiques à traiter
+
+  IMPORTANT: Répondre entièrement en français.
+
+input_fields:
+  client_request:
+    desc: "Demande/message initial du client tel qu'écrit par lui, reflétant son style de communication, son état émotionnel et son niveau de détail"
+
+output_fields:
+  situation:
+    desc: "Rapport de situation structuré avec: résumé, objectifs (liste à puces), contraintes (liste à puces), questions juridiques (liste à puces). Répondre entièrement en français."

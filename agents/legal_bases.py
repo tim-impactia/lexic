@@ -1,26 +1,10 @@
 """Legal bases agent - identifies applicable legal provisions."""
 
 import dspy
+from shared.prompts import create_signature
 
-
-class IdentifyLegalBases(dspy.Signature):
-    """
-    Identifier les bases légales applicables à partir de l'état de fait.
-
-    Pour chaque base légale, fournir:
-    - Numéro d'article/disposition
-    - Nom de la loi
-    - Contenu de la disposition
-    - Pertinence pour le cas
-
-    IMPORTANT: Répondre entièrement en français.
-    """
-    factual_record: str = dspy.InputField(
-        desc="État de fait du cas"
-    )
-    legal_bases: str = dspy.OutputField(
-        desc="Bases légales applicables, chacune avec: article, nom de la loi, contenu, pertinence. Répondre entièrement en français."
-    )
+# Create signature from YAML
+IdentifyLegalBases = create_signature("agents", "legal_bases")
 
 
 class LegalBasisAgent(dspy.Module):

@@ -1,0 +1,52 @@
+step_name: initial_analysis
+
+dimensions:
+  - name: Legal_Domain_Accuracy
+    description: Is the legal domain correctly identified?
+    weight: 0.25
+    criteria:
+      1: Incorrect legal domain
+      2: Partially correct but imprecise
+      3: Correct but could be more specific
+      4: Accurate and appropriately specific
+      5: Perfectly accurate and precise
+
+  - name: Legal_Bases_Identification
+    description: Are potential legal bases correctly identified?
+    weight: 0.3
+    criteria:
+      1: Missing most relevant legal bases
+      2: Missing several important legal bases
+      3: Most relevant legal bases identified
+      4: All important legal bases identified
+      5: Comprehensive and precise identification of all relevant legal bases
+
+  - name: Assessment_Quality
+    description: Is the preliminary assessment sound and helpful?
+    weight: 0.25
+    criteria:
+      1: Assessment is unsound or unhelpful
+      2: Assessment has significant weaknesses
+      3: Assessment is adequate
+      4: Assessment is sound and helpful
+      5: Assessment is exceptionally insightful and actionable
+
+  - name: Investigation_Needs
+    description: Are investigation needs correctly identified?
+    weight: 0.15
+    criteria:
+      1: Investigation needs are poorly identified
+      2: Missing important investigation needs
+      3: Adequate identification of investigation needs
+      4: Thorough identification of investigation needs
+      5: Comprehensive and strategic identification of all investigation needs
+
+  - name: Complexity_Assessment
+    description: Is the complexity correctly assessed?
+    weight: 0.05
+    criteria:
+      1: Complexity assessment is incorrect
+      2: Complexity assessment is imprecise
+      3: Complexity assessment is adequate
+      4: Complexity assessment is accurate
+      5: Complexity assessment is precise and well-justified

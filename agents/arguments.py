@@ -1,29 +1,10 @@
 """Argumentation agent - develops legal arguments."""
 
 import dspy
+from shared.prompts import create_signature
 
-
-class DevelopArguments(dspy.Signature):
-    """
-    Développer des arguments juridiques à partir de l'état de fait et des bases légales.
-
-    Pour chaque argument, fournir:
-    - Thèse (prétention principale)
-    - Bases légales soutenant la thèse
-    - Soutien factuel
-    - Raisonnement reliant les faits à la conclusion juridique
-
-    IMPORTANT: Répondre entièrement en français.
-    """
-    factual_record: str = dspy.InputField(
-        desc="État de fait du cas"
-    )
-    legal_bases: str = dspy.InputField(
-        desc="Dispositions légales applicables"
-    )
-    arguments: str = dspy.OutputField(
-        desc="Arguments juridiques, chacun avec: thèse, bases légales, soutien factuel, raisonnement. Répondre entièrement en français."
-    )
+# Create signature from YAML
+DevelopArguments = create_signature("agents", "arguments")
 
 
 class ArgumentationAgent(dspy.Module):

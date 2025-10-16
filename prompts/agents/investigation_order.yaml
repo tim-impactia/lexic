@@ -1,0 +1,18 @@
+description: |
+  Créer un ordre d'investigation basé sur l'analyse initiale.
+
+  Produit:
+  - Objectif de l'investigation
+  - Questions pour le client
+  - Documents à demander
+  - Délai optionnel
+
+  IMPORTANT: Répondre entièrement en français.
+
+input_fields:
+  initial_analysis:
+    desc: "Analyse juridique initiale avec les besoins d'investigation"
+
+output_fields:
+  investigation_order:
+    desc: "Ordre d'investigation avec: objectif, questions (liste à puces), documents demandés (liste à puces). Répondre entièrement en français."

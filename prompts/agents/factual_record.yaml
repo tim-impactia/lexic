@@ -1,0 +1,21 @@
+description: |
+  Créer un état de fait structuré.
+
+  Produit:
+  - Résumé des faits
+  - Parties impliquées
+  - Chronologie
+  - Faits clés
+  - Preuves disponibles
+
+  IMPORTANT: Répondre entièrement en français.
+
+input_fields:
+  initial_facts:
+    desc: "Faits initiaux de la prise de contact avec le client"
+  investigation_report:
+    desc: "Rapport d'investigation avec des faits supplémentaires (vide si aucun)"
+
+output_fields:
+  factual_record:
+    desc: "État de fait structuré avec: résumé, parties (liste à puces), chronologie (liste à puces, chronologique), faits clés (liste à puces), preuves (liste à puces). Répondre entièrement en français."

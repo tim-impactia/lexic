@@ -1,33 +1,10 @@
 """Recommendation agent - provides client recommendations."""
 
 import dspy
+from shared.prompts import create_signature
 
-
-class GenerateRecommendations(dspy.Signature):
-    """
-    Générer des recommandations pour le client.
-
-    Pour chaque recommandation, fournir:
-    - Action à entreprendre
-    - Justification
-    - Risques
-    - Alternatives
-    - Prochaines étapes
-
-    IMPORTANT: Répondre entièrement en français.
-    """
-    considerations: str = dspy.InputField(
-        desc="Considérations juridiques"
-    )
-    judgment: str = dspy.InputField(
-        desc="Jugement juridique ou issue attendue"
-    )
-    client_objectives: str = dspy.InputField(
-        desc="Objectifs du client tirés du rapport de situation"
-    )
-    recommendations: str = dspy.OutputField(
-        desc="Recommandations, chacune avec: action, justification, risques (liste à puces), alternatives (liste à puces), prochaines étapes (liste à puces). Répondre entièrement en français."
-    )
+# Create signature from YAML
+GenerateRecommendations = create_signature("agents", "recommendations")
 
 
 class RecommendationAgent(dspy.Module):

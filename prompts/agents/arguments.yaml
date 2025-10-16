@@ -1,0 +1,20 @@
+description: |
+  Développer des arguments juridiques à partir de l'état de fait et des bases légales.
+
+  Pour chaque argument, fournir:
+  - Thèse (prétention principale)
+  - Bases légales soutenant la thèse
+  - Soutien factuel
+  - Raisonnement reliant les faits à la conclusion juridique
+
+  IMPORTANT: Répondre entièrement en français.
+
+input_fields:
+  factual_record:
+    desc: "État de fait du cas"
+  legal_bases:
+    desc: "Dispositions légales applicables"
+
+output_fields:
+  arguments:
+    desc: "Arguments juridiques, chacun avec: thèse, bases légales, soutien factuel, raisonnement. Répondre entièrement en français."

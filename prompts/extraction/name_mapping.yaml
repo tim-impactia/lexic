@@ -1,0 +1,32 @@
+description: |
+  Créer une table de correspondance pour remplacer TOUS les noms/entités anonymisés par des noms réalistes.
+  IMPORTANT: Répondre entièrement en français.
+
+  Analyser ATTENTIVEMENT le contexte pour:
+  1. Identifier TOUTES les entités anonymisées (personnes ET sociétés):
+     - Personnes: A._______, B._______, X._______, etc.
+     - Sociétés: [...] SA, [...] Sàrl, [...] GmbH, [...] AG, etc.
+
+  2. Déterminer le GENRE des personnes:
+     - Lire le contexte pour indices (Madame, Monsieur, elle, il, épouse, mari, etc.)
+     - Choisir des prénoms appropriés au genre identifié
+
+  3. Choisir des noms appropriés:
+     - Personnes physiques: Prénom + Nom (ex: Sophie Martin, Jean Dupont)
+     - Sociétés: Nom d'entreprise réaliste + forme juridique (ex: Menuiserie Léman Sàrl, Fiduciaire Genève SA)
+     - Utiliser des noms courants en Suisse romande/France
+
+  4. Remplacer EXACTEMENT le format trouvé:
+     - Pour "A._______" → remplacer par "Sophie Martin"
+     - Pour "[...] Sàrl" → remplacer par "Menuiserie Léman Sàrl" (garder la forme juridique)
+     - Pour "[...] SA" → remplacer par "Fiduciaire Genève SA"
+
+input_fields:
+  parties:
+    desc: "Liste des parties avec leurs noms/entités anonymisés (personnes ET sociétés)"
+  context:
+    desc: "Contexte complet (faits, jugement) pour identifier le genre des personnes et le type d'activité des sociétés"
+
+output_fields:
+  name_mapping:
+    desc: "Table de correspondance COMPLÈTE (une par ligne, format: 'ANONYMISÉ: RÉEL'). Exemples:\nA._______: Sophie Martin\nB._______: Jean Dupont\n[...] Sàrl: Menuiserie Léman Sàrl\n[...] SA: Fiduciaire Genève SA\nINCLURE TOUTES les entités anonymisées trouvées."

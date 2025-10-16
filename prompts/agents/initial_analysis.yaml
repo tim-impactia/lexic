@@ -1,0 +1,19 @@
+description: |
+  Effectuer une analyse juridique initiale basée sur la situation du client.
+
+  Produit:
+  - Identification du domaine juridique
+  - Bases légales potentielles à investiguer
+  - Évaluation préliminaire
+  - Besoins d'investigation
+  - Évaluation de la complexité
+
+  IMPORTANT: Répondre entièrement en français.
+
+input_fields:
+  situation:
+    desc: "Situation du client: résumé, objectifs, contraintes, questions juridiques"
+
+output_fields:
+  initial_analysis:
+    desc: "Analyse structurée avec: domaine juridique, bases légales potentielles (liste à puces), évaluation préliminaire, besoins d'investigation (liste à puces), évaluation de la complexité. Répondre entièrement en français."
