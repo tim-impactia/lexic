@@ -1,7 +1,7 @@
 """Factual record agent - creates structured factual records."""
 
 import dspy
-from shared.prompts import create_signature
+from lexic.shared.prompts import create_signature
 
 # Create signature from YAML
 CreateFactualRecord = create_signature("agents", "factual_record")

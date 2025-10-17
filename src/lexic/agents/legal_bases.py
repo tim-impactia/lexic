@@ -1,7 +1,7 @@
 """Legal bases agent - identifies applicable legal provisions."""
 
 import dspy
-from shared.prompts import create_signature
+from lexic.shared.prompts import create_signature
 
 # Create signature from YAML
 IdentifyLegalBases = create_signature("agents", "legal_bases")

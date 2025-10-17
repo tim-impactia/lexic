@@ -2,9 +2,9 @@
 
 import dspy
 from typing import Dict, List
-from evals.judges.rubrics import Rubric, get_rubric
-from shared.config import Config
-from shared.prompts import create_signature
+from lexic.evals.judges.rubrics import Rubric, get_rubric
+from lexic.shared.config import Config
+from lexic.shared.prompts import create_signature
 
 # Create judge signatures from YAML
 EvaluateDimension = create_signature("evals", "evaluate_dimension")
@@ -65,8 +65,12 @@ class LexicJudge(dspy.Module):
                 ground_truth=ground_truth
             )
 
-            # Ensure score is in valid range
-            score = max(1, min(5, result.score))
+            # Convert score to int and ensure it's in valid range
+            try:
+                score = int(result.score)
+            except (ValueError, TypeError):
+                score = 3  # Default to middle score if conversion fails
+            score = max(1, min(5, score))
             scores[dim.name] = score
             explanations[dim.name] = result.explanation
 

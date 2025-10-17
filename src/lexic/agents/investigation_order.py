@@ -1,7 +1,7 @@
 """Investigation order agent - creates orders for client to gather information."""
 
 import dspy
-from shared.prompts import create_signature
+from lexic.shared.prompts import create_signature
 
 # Create signature from YAML
 CreateInvestigationOrder = create_signature("agents", "investigation_order")

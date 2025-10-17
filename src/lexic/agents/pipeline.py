@@ -3,14 +3,14 @@
 from typing import Dict, Optional
 from pathlib import Path
 
-from agents.qualification import QualificationAgent
-from agents.initial_analysis import InitialAnalysisAgent
-from agents.investigation_order import InvestigationOrderAgent
-from agents.factual_record import FactualRecordAgent
-from agents.legal_bases import LegalBasisAgent
-from agents.arguments import ArgumentationAgent
-from agents.considerations import ConsiderationAgent
-from agents.recommendations import RecommendationAgent
+from lexic.agents.qualification import QualificationAgent
+from lexic.agents.initial_analysis import InitialAnalysisAgent
+from lexic.agents.investigation_order import InvestigationOrderAgent
+from lexic.agents.factual_record import FactualRecordAgent
+from lexic.agents.legal_bases import LegalBasisAgent
+from lexic.agents.arguments import ArgumentationAgent
+from lexic.agents.considerations import ConsiderationAgent
+from lexic.agents.recommendations import RecommendationAgent
 
 
 class LexicPipeline:

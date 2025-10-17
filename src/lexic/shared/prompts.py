@@ -1,6 +1,7 @@
 """Prompt loading utilities."""
 
 from pathlib import Path
+from typing import Annotated
 import yaml
 import dspy
 
@@ -56,11 +57,11 @@ def create_signature(category: str, name: str) -> type:
 
     # Add input fields
     for field_name, field_config in config.get('input_fields', {}).items():
-        annotations[field_name] = (str, dspy.InputField(desc=field_config['desc']))
+        annotations[field_name] = Annotated[str, dspy.InputField(desc=field_config['desc'])]
 
     # Add output fields
     for field_name, field_config in config.get('output_fields', {}).items():
-        annotations[field_name] = (str, dspy.OutputField(desc=field_config['desc']))
+        annotations[field_name] = Annotated[str, dspy.OutputField(desc=field_config['desc'])]
 
     # Create signature class dynamically
     signature_class = type(

@@ -4,10 +4,10 @@ import dspy
 from pathlib import Path
 from typing import List
 from docling.document_converter import DocumentConverter
-from shared.models import CourtDecision, LegalBasis, LegalArgument, Consideration, Judgment
-from shared.io import write_markdown
-from shared.config import Config
-from shared.prompts import create_signature
+from lexic.shared.models import CourtDecision, LegalBasis, LegalArgument, Consideration, Judgment
+from lexic.shared.io import write_markdown
+from lexic.shared.config import Config
+from lexic.shared.prompts import create_signature
 
 # Create signatures from YAML
 CreateNameMapping = create_signature("extraction", "name_mapping")
@@ -102,7 +102,7 @@ def extract_decision(doc_path: Path, output_dir: Path, decision_id: str):
     # Convert document to markdown (skip if already exists)
     if full_text_path.exists():
         print(f"Loading existing full_text.md for {decision_id}...")
-        from shared.io import read_markdown
+        from lexic.shared.io import read_markdown
         _, full_text = read_markdown(full_text_path)
     else:
         print(f"Converting {doc_path} to markdown...")

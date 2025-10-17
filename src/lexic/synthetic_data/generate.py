@@ -4,14 +4,14 @@ import dspy
 from pathlib import Path
 from datetime import datetime
 from typing import List
-from shared.models import (
+from lexic.shared.models import (
     ClientPersona, InitialFacts, Situation, InitialAnalysis,
     InvestigationOrder, InvestigationReport, FactualRecord,
     LegalBasis, LegalArgument, Consideration, Judgment, Recommendation
 )
-from shared.io import read_markdown, write_markdown, get_decision_path
-from shared.config import Config
-from shared.prompts import create_signature
+from lexic.shared.io import read_markdown, write_markdown, get_decision_path
+from lexic.shared.config import Config
+from lexic.shared.prompts import create_signature
 
 # Create signatures from YAML
 GenerateClientPersona = create_signature("generation", "client_persona")
@@ -317,7 +317,7 @@ def generate_all_synthetic_cases(decisions_dir: Path, output_dir: Path):
         decisions_dir: Directory containing court decisions
         output_dir: Directory to save synthetic cases
     """
-    from shared.io import list_decision_dirs
+    from lexic.shared.io import list_decision_dirs
 
     decision_ids = list_decision_dirs(decisions_dir)
 

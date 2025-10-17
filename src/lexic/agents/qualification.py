@@ -1,8 +1,8 @@
 """Qualification agent - transforms client dialogue into situation report."""
 
 import dspy
-from shared.models import ClientPersona, InitialFacts, Situation
-from shared.prompts import create_signature
+from lexic.shared.models import ClientPersona, InitialFacts, Situation
+from lexic.shared.prompts import create_signature
 
 # Create signature from YAML
 QualifyClientSituation = create_signature("agents", "qualification")

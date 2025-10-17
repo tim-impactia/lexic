@@ -6,18 +6,18 @@ from datetime import datetime
 from typing import Dict, List, Optional
 import importlib
 
-from shared.config import Config
-from shared.io import list_cases, load_case_step, write_markdown, get_case_path
-from evals.judges.judge import evaluate_output
+from lexic.shared.config import Config
+from lexic.shared.io import list_cases, load_case_step, write_markdown, get_case_path
+from lexic.evals.judges.judge import evaluate_output
 
 
 # Map step names to agent modules and functions
 AGENT_REGISTRY = {
-    "qualification": ("agents.qualification", "run_qualification"),
-    "initial_analysis": ("agents.initial_analysis", "InitialAnalysisAgent"),
-    "factual_record": ("agents.factual_record", "FactualRecordAgent"),
-    "legal_arguments": ("agents.arguments", "ArgumentationAgent"),
-    "recommendations": ("agents.recommendations", "RecommendationAgent"),
+    "qualification": ("lexic.agents.qualification", "run_qualification"),
+    "initial_analysis": ("lexic.agents.initial_analysis", "InitialAnalysisAgent"),
+    "factual_record": ("lexic.agents.factual_record", "FactualRecordAgent"),
+    "legal_arguments": ("lexic.agents.arguments", "ArgumentationAgent"),
+    "recommendations": ("lexic.agents.recommendations", "RecommendationAgent"),
 }
 
 # Map step names to input step files

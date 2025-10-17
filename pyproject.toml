@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lexic"
+version = "0.1.0"
+description = "Legal AI SaaS - Multi-agent evaluation framework"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "dspy-ai",
+    "mlflow",
+    "docling",
+    "anthropic",
+    "python-dotenv",
+    "pyyaml",
+    "pydantic",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "black",
+    "ruff",
+    "ipython",
+    "jupyter",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+lexic = ["prompts/**/*.yaml"]
+
+[tool.black]
+line-length = 100
+
+[tool.ruff]
+line-length = 100

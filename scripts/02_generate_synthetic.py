@@ -1,12 +1,6 @@
 #!/usr/bin/env python3
 """Generate synthetic cases from extracted court decisions."""
 
-import sys
-from pathlib import Path
-
-# Add parent directory to path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -14,8 +8,8 @@ load_dotenv()
 
 import dspy
 
-from shared.config import Config
-from synthetic_data.generate import generate_all_synthetic_cases
+from lexic.shared.config import Config
+from lexic.synthetic_data.generate import generate_all_synthetic_cases
 
 
 def main():

@@ -1,7 +1,7 @@
 """Recommendation agent - provides client recommendations."""
 
 import dspy
-from shared.prompts import create_signature
+from lexic.shared.prompts import create_signature
 
 # Create signature from YAML
 GenerateRecommendations = create_signature("agents", "recommendations")

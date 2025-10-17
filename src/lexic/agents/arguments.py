@@ -1,7 +1,7 @@
 """Argumentation agent - develops legal arguments."""
 
 import dspy
-from shared.prompts import create_signature
+from lexic.shared.prompts import create_signature
 
 # Create signature from YAML
 DevelopArguments = create_signature("agents", "arguments")

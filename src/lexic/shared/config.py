@@ -8,8 +8,8 @@ from typing import Optional
 class Config:
     """Configuration for Lexic evaluation framework."""
 
-    # Paths
-    PROJECT_ROOT = Path(__file__).parent.parent
+    # Paths - use environment variables or current working directory
+    PROJECT_ROOT = Path(os.getenv("LEXIC_PROJECT_ROOT", Path.cwd()))
     DATA_DIR = PROJECT_ROOT / "data"
     COURT_DECISIONS_DIR = DATA_DIR / "court_decisions"
     SYNTHETIC_CASES_DIR = DATA_DIR / "synthetic_cases"

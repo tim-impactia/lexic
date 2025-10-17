@@ -46,6 +46,44 @@ Since we don't have ground truth data for each step, we're creating synthetic da
 
 ```
 lexic/
+├── src/
+│   └── lexic/                    # Main package
+│       ├── __init__.py
+│       │
+│       ├── agents/               # Production agents (main app)
+│       │   ├── __init__.py
+│       │   ├── qualification.py          # QualificationAgent
+│       │   ├── initial_analysis.py       # InitialAnalysisAgent
+│       │   ├── investigation_order.py    # InvestigationOrderAgent
+│       │   ├── investigation_report.py   # InvestigationReportAgent
+│       │   ├── factual_record.py         # FactualRecordAgent
+│       │   ├── legal_bases.py            # LegalBasisAgent
+│       │   ├── arguments.py              # ArgumentationAgent
+│       │   ├── considerations.py         # ConsiderationAgent
+│       │   ├── recommendations.py        # RecommendationAgent
+│       │   └── pipeline.py               # Full orchestrated pipeline
+│       │
+│       ├── shared/
+│       │   ├── __init__.py
+│       │   ├── models.py         # Dataclasses for all entities
+│       │   ├── config.py         # Configuration management
+│       │   ├── prompts.py        # Prompt/signature management
+│       │   └── io.py             # Markdown file I/O utilities
+│       │
+│       ├── synthetic_data/       # Synthetic data generation
+│       │   ├── __init__.py
+│       │   ├── extract.py        # Extract from PDFs using DSPy
+│       │   └── generate.py       # Generate synthetic cases using DSPy
+│       │
+│       └── evals/                # Evaluation framework
+│           ├── __init__.py
+│           ├── judges/
+│           │   ├── __init__.py
+│           │   ├── judge.py      # LLM-as-judge implementation
+│           │   └── rubrics.py    # Evaluation rubrics for each step
+│           │
+│           └── orchestrator.py   # Evaluation orchestration with MLFlow
+│
 ├── data/
 │   ├── court_decisions/          # Extracted court decisions
 │   │   ├── decision_001/
@@ -84,39 +122,6 @@ lexic/
 │       │   └── summary.md
 │       └── ...
 │
-├── agents/                       # Production agents (main app)
-│   ├── __init__.py
-│   ├── qualification.py          # QualificationAgent
-│   ├── initial_analysis.py       # InitialAnalysisAgent
-│   ├── investigation_order.py    # InvestigationOrderAgent
-│   ├── investigation_report.py   # InvestigationReportAgent
-│   ├── factual_record.py         # FactualRecordAgent
-│   ├── legal_bases.py            # LegalBasisAgent
-│   ├── arguments.py              # ArgumentationAgent
-│   ├── considerations.py         # ConsiderationAgent
-│   ├── recommendations.py        # RecommendationAgent
-│   └── pipeline.py               # Full orchestrated pipeline
-│
-├── shared/
-│   ├── __init__.py
-│   ├── models.py                 # Dataclasses for all entities
-│   ├── config.py                 # Configuration management
-│   └── io.py                     # Markdown file I/O utilities
-│
-├── synthetic_data/               # Synthetic data generation
-│   ├── __init__.py
-│   ├── extract.py                # Extract from PDFs using DSPy
-│   └── generate.py               # Generate synthetic cases using DSPy
-│
-├── evals/                        # Evaluation framework
-│   ├── __init__.py
-│   ├── judges/
-│   │   ├── __init__.py
-│   │   ├── judge.py              # LLM-as-judge implementation
-│   │   └── rubrics.py            # Evaluation rubrics for each step
-│   │
-│   └── orchestrator.py           # Evaluation orchestration with MLFlow
-│
 ├── scripts/
 │   ├── 01_extract_decisions.py   # Extract court decisions to markdown
 │   ├── 02_generate_synthetic.py  # Generate synthetic cases
@@ -131,15 +136,16 @@ lexic/
 │   ├── test_extraction.py
 │   └── test_generation.py
 │
-├── mlruns/                       # MLFlow artifacts (gitignored)
+├── mlruns/                       # MLFlow tracking (SQLite DB, gitignored)
+├── mlartifacts/                  # MLFlow artifacts (gitignored)
 │
+├── pyproject.toml                # Package configuration
 ├── Dockerfile                    # For production app
 ├── docker-compose.yml            # MLFlow + app services
-├── requirements.txt
 ├── .env.example
 ├── .gitignore
 ├── README.md
-└── claude.md                     # This file
+└── CLAUDE.md                     # This file
 ```
 
 ## DSPy Agent Architecture
@@ -262,11 +268,41 @@ model: gpt-4o
 
 ### Reading/Writing Markdown Files
 
-Use `shared/io.py` utilities:
+Use `lexic.shared.io` utilities:
 - `read_markdown(path)`: Returns (metadata_dict, content_string)
 - `write_markdown(path, metadata, content)`: Writes markdown with frontmatter
 - `list_cases(directory)`: Lists all case directories
 - `load_case_step(case_dir, step_name)`: Loads specific step from case
+
+### Package Installation
+
+Install the package in editable mode for development:
+```bash
+pip install -e .
+# Or use requirements.txt which includes -e .
+pip install -r requirements.txt
+```
+
+This allows you to import modules as:
+```python
+from lexic.agents.qualification import QualificationAgent
+from lexic.shared.config import Config
+from lexic.synthetic_data.extract import extract_all_decisions
+```
+
+### Configuration
+
+The `Config` class uses the current working directory as the project root by default.
+Run scripts from the project root directory:
+```bash
+cd /path/to/lexic
+python scripts/01_extract_decisions.py
+```
+
+You can override the project root with an environment variable:
+```bash
+export LEXIC_PROJECT_ROOT=/path/to/lexic
+```
 
 ## Docker Setup
 

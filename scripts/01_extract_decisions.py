@@ -1,12 +1,5 @@
 #!/usr/bin/env python3
 """Extract court decision PDFs to structured markdown files."""
-
-import sys
-from pathlib import Path
-
-# Add parent directory to path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -15,8 +8,8 @@ load_dotenv()
 import dspy
 from anthropic import Anthropic
 
-from shared.config import Config
-from synthetic_data.extract import extract_all_decisions
+from lexic.shared.config import Config
+from lexic.synthetic_data.extract import extract_all_decisions
 
 
 def main():

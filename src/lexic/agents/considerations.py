@@ -1,7 +1,7 @@
 """Consideration agent - analyzes legal considerations."""
 
 import dspy
-from shared.prompts import create_signature
+from lexic.shared.prompts import create_signature
 
 # Create signature from YAML
 AnalyzeConsiderations = create_signature("agents", "considerations")

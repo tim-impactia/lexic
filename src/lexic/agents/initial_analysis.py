@@ -1,7 +1,7 @@
 """Initial analysis agent - produces initial legal analysis from situation."""
 
 import dspy
-from shared.prompts import create_signature
+from lexic.shared.prompts import create_signature
 
 # Create signature from YAML
 PerformInitialAnalysis = create_signature("agents", "initial_analysis")

@@ -1,13 +1,7 @@
 #!/usr/bin/env python3
 """Run evaluations on a pipeline step."""
 
-import sys
-from pathlib import Path
 import argparse
-
-# Add parent directory to path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -15,8 +9,8 @@ load_dotenv()
 
 import dspy
 
-from shared.config import Config
-from evals.orchestrator import run_evaluation
+from lexic.shared.config import Config
+from lexic.evals.orchestrator import run_evaluation
 
 
 def main():
