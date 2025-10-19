@@ -71,6 +71,7 @@ Thumbs.db
 *~
 .swp
 .swo
+.~lock.*#
 
 # Logs
 *.log
