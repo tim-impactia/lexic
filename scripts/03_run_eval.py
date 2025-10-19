@@ -18,9 +18,9 @@ def main():
     parser = argparse.ArgumentParser(description="Run evaluation for a pipeline step")
     parser.add_argument(
         "--step",
-        required=True,
+        default="all",
         choices=["qualification", "initial_analysis", "factual_record", "legal_arguments", "recommendations", "all"],
-        help="Pipeline step to evaluate (use 'all' to run all steps)"
+        help="Pipeline step to evaluate (default: all)"
     )
     parser.add_argument(
         "--n-cases",
@@ -71,7 +71,10 @@ def main():
     # In production, you might want to configure separate adapters
 
     print("=" * 60)
-    print(f"Evaluation: {args.step}")
+    if args.step == "all":
+        print("Evaluation: All Steps")
+    else:
+        print(f"Evaluation: {args.step}")
     print("=" * 60)
     print(f"Agent model: {Config.DEFAULT_MODEL}")
     print(f"Judge model: {Config.JUDGE_MODEL}")
