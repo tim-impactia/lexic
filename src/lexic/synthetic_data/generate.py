@@ -159,7 +159,7 @@ def load_decision_data(decision_dir: Path) -> dict:
     }
 
 
-def generate_synthetic_case(decision_id: str, case_id: str, party_role: str, decisions_dir: Path, output_dir: Path):
+def generate_synthetic_case(decision_id: str, case_id: str, party_role: str, decisions_dir: Path, output_dir: Path, specific_docs: List[str] = None):
     """
     Generate a synthetic case from a court decision for a specific party.
     Saves files incrementally and skips steps that already exist.
@@ -170,6 +170,8 @@ def generate_synthetic_case(decision_id: str, case_id: str, party_role: str, dec
         party_role: Role of the party - 'demandeur' (plaintiff) or 'défendeur' (defendant)
         decisions_dir: Directory containing court decisions
         output_dir: Directory to save synthetic case
+        specific_docs: List of specific document numbers to generate (e.g., ['01', '02', '03']).
+                      If None, generates all documents. If provided, only generates specified documents.
     """
     decision_dir = get_decision_path(decisions_dir, decision_id)
 
@@ -189,9 +191,19 @@ def generate_synthetic_case(decision_id: str, case_id: str, party_role: str, dec
     }
 
     # Helper to check and save
-    def save_if_missing(filename: str, title: str, content: str, generator_func=None):
+    def save_if_missing(filename: str, title: str, content: str, generator_func=None, doc_number: str = None):
         """Save file if it doesn't exist, otherwise load existing content."""
         filepath = case_dir / filename
+
+        # Check if this document should be processed based on specific_docs filter
+        if specific_docs is not None and doc_number is not None:
+            if doc_number not in specific_docs:
+                # Skip this document - not in the requested list
+                if filepath.exists():
+                    _, existing_content = read_markdown(filepath)
+                    return existing_content
+                return ""  # Return empty string for dependencies
+
         if filepath.exists():
             print(f"  ✓ {title} (already exists)")
             _, existing_content = read_markdown(filepath)
@@ -219,7 +231,8 @@ def generate_synthetic_case(decision_id: str, case_id: str, party_role: str, dec
         lambda: generator.gen_persona(
             decision_context=decision_context,
             party_role=party_role
-        ).client_persona
+        ).client_persona,
+        doc_number="01"
     )
 
     client_request = save_if_missing(
@@ -228,7 +241,8 @@ def generate_synthetic_case(decision_id: str, case_id: str, party_role: str, dec
             client_persona=client_persona,
             decision_context=decision_context,
             party_role=party_role
-        ).client_request
+        ).client_request,
+        doc_number="01b"
     )
 
     initial_facts = save_if_missing(
@@ -237,7 +251,8 @@ def generate_synthetic_case(decision_id: str, case_id: str, party_role: str, dec
             decision_context=decision_data['facts_timeline'],
             client_persona=client_persona,
             party_role=party_role
-        ).initial_facts
+        ).initial_facts,
+        doc_number="02"
     )
 
     situation = save_if_missing(
@@ -246,7 +261,8 @@ def generate_synthetic_case(decision_id: str, case_id: str, party_role: str, dec
             client_persona=client_persona,
             initial_facts=initial_facts,
             decision_context=decision_context
-        ).situation
+        ).situation,
+        doc_number="03"
     )
 
     initial_analysis = save_if_missing(
@@ -254,7 +270,8 @@ def generate_synthetic_case(decision_id: str, case_id: str, party_role: str, dec
         lambda: generator.gen_initial_analysis(
             situation=situation,
             decision_legal_bases=decision_data['legal_bases']
-        ).initial_analysis
+        ).initial_analysis,
+        doc_number="04"
     )
 
     investigation_order = save_if_missing(
@@ -262,7 +279,8 @@ def generate_synthetic_case(decision_id: str, case_id: str, party_role: str, dec
         lambda: generator.gen_investigation_order(
             initial_analysis=initial_analysis,
             decision_facts=decision_data['facts_timeline']
-        ).investigation_order
+        ).investigation_order,
+        doc_number="05"
     )
 
     investigation_report = save_if_missing(
@@ -270,7 +288,8 @@ def generate_synthetic_case(decision_id: str, case_id: str, party_role: str, dec
         lambda: generator.gen_investigation_report(
             investigation_order=investigation_order,
             decision_facts=decision_data['facts_timeline']
-        ).investigation_report
+        ).investigation_report,
+        doc_number="06"
     )
 
     initial_factual_record = save_if_missing(
@@ -279,7 +298,8 @@ def generate_synthetic_case(decision_id: str, case_id: str, party_role: str, dec
             initial_facts=initial_facts,
             investigation_report="",
             decision_facts=decision_data['facts_timeline']
-        ).factual_record
+        ).factual_record,
+        doc_number="09"
     )
 
     final_factual_record = save_if_missing(
@@ -288,14 +308,15 @@ def generate_synthetic_case(decision_id: str, case_id: str, party_role: str, dec
             initial_facts=initial_facts,
             investigation_report=investigation_report,
             decision_facts=decision_data['facts_timeline']
-        ).factual_record
+        ).factual_record,
+        doc_number="10"
     )
 
     # Copy decision data (these don't need generation)
-    save_if_missing("11_gt_applicable_legal_bases.md", "Ground Truth: Legal Bases", decision_data['legal_bases'])
-    save_if_missing("12_gt_legal_arguments.md", "Ground Truth: Legal Arguments", decision_data['arguments'])
-    save_if_missing("13_gt_considerations.md", "Ground Truth: Considerations", decision_data['considerations'])
-    save_if_missing("14_gt_judgment.md", "Ground Truth: Judgment", decision_data['judgment'])
+    save_if_missing("11_gt_applicable_legal_bases.md", "Ground Truth: Legal Bases", decision_data['legal_bases'], doc_number="11")
+    save_if_missing("12_gt_legal_arguments.md", "Ground Truth: Legal Arguments", decision_data['arguments'], doc_number="12")
+    save_if_missing("13_gt_considerations.md", "Ground Truth: Considerations", decision_data['considerations'], doc_number="13")
+    save_if_missing("14_gt_judgment.md", "Ground Truth: Judgment", decision_data['judgment'], doc_number="14")
 
     recommendations = save_if_missing(
         "15_gt_recommendations.md", "Ground Truth: Recommendations", "",
@@ -303,7 +324,8 @@ def generate_synthetic_case(decision_id: str, case_id: str, party_role: str, dec
             judgment=decision_data['judgment'],
             considerations=decision_data['considerations'],
             client_objectives=situation
-        ).recommendations
+        ).recommendations,
+        doc_number="15"
     )
 
     print(f"✓ Synthetic case complete at {case_dir}")
