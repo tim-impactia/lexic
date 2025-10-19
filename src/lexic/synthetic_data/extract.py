@@ -1,8 +1,9 @@
 """Extract structured data from court decision documents (PDF/DOCX) using DSPy."""
 
 import dspy
+import json
 from pathlib import Path
-from typing import List
+from typing import List, Dict
 from docling.document_converter import DocumentConverter
 from lexic.shared.models import CourtDecision, LegalBasis, LegalArgument, Consideration, Judgment
 from lexic.shared.io import write_markdown
@@ -17,35 +18,53 @@ ExtractAllElements = create_signature("extraction", "extract_all")
 class CourtDecisionExtractor(dspy.Module):
     """Extract structured elements from a court decision document."""
 
-    def __init__(self):
+    def __init__(self, decision_dir: Path = None):
         super().__init__()
         self.extract_all = dspy.ChainOfThought(ExtractAllElements)
         self.create_mapping = dspy.ChainOfThought(CreateNameMapping)
+        self.decision_dir = decision_dir
 
     def forward(self, full_text: str):
         """Extract all elements from court decision text in a single LLM call."""
         result = self.extract_all(full_text=full_text)
 
-        # Create a single name mapping for consistency across all documents
-        print("  Creating name mapping...")
-        # Include more context to help identify gender and company types
-        context = f"Faits: {result.facts_timeline[:800]}\nJugement: {result.judgment[:800]}"
+        # Check if name mapping already exists
+        mapping_path = self.decision_dir / "name_mapping.json" if self.decision_dir else None
 
-        mapping_result = self.create_mapping(
-            parties=result.parties,
-            context=context
-        )
+        if mapping_path and mapping_path.exists():
+            print("  Loading existing name mapping...")
+            with open(mapping_path, 'r', encoding='utf-8') as f:
+                mapping = json.load(f)
+            print(f"  Name mapping loaded: {len(mapping)} entities")
+            for anon, real in mapping.items():
+                print(f"    {anon} → {real}")
+        else:
+            # Create a single name mapping for consistency across all documents
+            print("  Creating name mapping...")
+            # Include more context to help identify gender and company types
+            context = f"Faits: {result.facts_timeline[:800]}\nJugement: {result.judgment[:800]}"
 
-        # Parse the mapping into a dict
-        mapping = {}
-        for line in mapping_result.name_mapping.strip().split('\n'):
-            if ':' in line:
-                anon, real = line.split(':', 1)
-                mapping[anon.strip()] = real.strip()
+            mapping_result = self.create_mapping(
+                parties=result.parties,
+                context=context
+            )
 
-        print(f"  Name mapping created: {len(mapping)} entities")
-        for anon, real in mapping.items():
-            print(f"    {anon} → {real}")
+            # Parse the mapping into a dict
+            mapping = {}
+            for line in mapping_result.name_mapping.strip().split('\n'):
+                if ':' in line:
+                    anon, real = line.split(':', 1)
+                    mapping[anon.strip()] = real.strip()
+
+            print(f"  Name mapping created: {len(mapping)} entities")
+            for anon, real in mapping.items():
+                print(f"    {anon} → {real}")
+
+            # Save the mapping
+            if mapping_path:
+                with open(mapping_path, 'w', encoding='utf-8') as f:
+                    json.dump(mapping, f, ensure_ascii=False, indent=2)
+                print(f"  Name mapping saved to {mapping_path.name}")
 
         # Apply mapping to all extracted elements
         print("  Applying name mapping to all documents...")
@@ -62,10 +81,12 @@ class CourtDecisionExtractor(dspy.Module):
         return dspy.Prediction(
             parties=apply_mapping(result.parties),
             facts_timeline=apply_mapping(result.facts_timeline),
+            evidence=apply_mapping(result.evidence),
             legal_bases=apply_mapping(result.legal_bases),
             arguments=apply_mapping(result.arguments),
             considerations=apply_mapping(result.considerations),
-            judgment=apply_mapping(result.judgment)
+            judgment=apply_mapping(result.judgment),
+            name_mapping=mapping
         )
 
 
@@ -115,6 +136,26 @@ def extract_decision(doc_path: Path, output_dir: Path, decision_id: str):
         }
         write_markdown(full_text_path, full_text_metadata, full_text)
 
+    # Check which documents already exist
+    document_files = {
+        "parties": decision_dir / "parties.md",
+        "facts_timeline": decision_dir / "facts_timeline.md",
+        "evidence": decision_dir / "evidence.md",
+        "legal_bases": decision_dir / "legal_bases.md",
+        "arguments": decision_dir / "arguments.md",
+        "considerations": decision_dir / "considerations.md",
+        "judgment": decision_dir / "judgment.md"
+    }
+
+    # Determine which documents need to be extracted
+    missing_docs = {name: path for name, path in document_files.items() if not path.exists()}
+
+    if not missing_docs:
+        print(f"✓ All documents already exist for {decision_id}, skipping extraction")
+        return
+
+    print(f"Extracting {len(missing_docs)} missing document(s): {', '.join(missing_docs.keys())}")
+
     # Metadata for LLM-extracted elements (includes extraction_model)
     metadata = {
         "decision_id": decision_id,
@@ -122,37 +163,41 @@ def extract_decision(doc_path: Path, output_dir: Path, decision_id: str):
         "extraction_model": Config.EXTRACTION_MODEL
     }
 
-    # Initialize extractor
-    print("Extracting structured elements...")
+    # Initialize extractor and extract all elements
+    print("Running extraction...")
     try:
-        extractor = CourtDecisionExtractor()
+        extractor = CourtDecisionExtractor(decision_dir=decision_dir)
 
         # Extract structured elements
         result = extractor(full_text=full_text)
 
-        # Save parties
-        parties_lines = result.parties.strip().split('\n')
-        parties_content = "\n".join(f"- {line.lstrip('- ')}" for line in parties_lines if line.strip())
-        write_markdown(decision_dir / "parties.md", metadata, f"# Parties\n\n{parties_content}")
+        # Save only missing documents
+        if "parties" in missing_docs:
+            parties_lines = result.parties.strip().split('\n')
+            parties_content = "\n".join(f"- {line.lstrip('- ')}" for line in parties_lines if line.strip())
+            write_markdown(missing_docs["parties"], metadata, f"# Parties\n\n{parties_content}")
 
-        # Save facts timeline
-        facts_lines = result.facts_timeline.strip().split('\n')
-        facts_content = "\n".join(f"- {line.lstrip('- ')}" for line in facts_lines if line.strip())
-        write_markdown(decision_dir / "facts_timeline.md", metadata, f"# Facts Timeline\n\n{facts_content}")
+        if "facts_timeline" in missing_docs:
+            facts_lines = result.facts_timeline.strip().split('\n')
+            facts_content = "\n".join(f"- {line.lstrip('- ')}" for line in facts_lines if line.strip())
+            write_markdown(missing_docs["facts_timeline"], metadata, f"# Facts Timeline\n\n{facts_content}")
 
-        # Save legal bases
-        write_markdown(decision_dir / "legal_bases.md", metadata, f"# Legal Bases\n\n{result.legal_bases}")
+        if "evidence" in missing_docs:
+            write_markdown(missing_docs["evidence"], metadata, f"# Evidence\n\n{result.evidence}")
 
-        # Save arguments
-        write_markdown(decision_dir / "arguments.md", metadata, f"# Legal Arguments\n\n{result.arguments}")
+        if "legal_bases" in missing_docs:
+            write_markdown(missing_docs["legal_bases"], metadata, f"# Legal Bases\n\n{result.legal_bases}")
 
-        # Save considerations
-        write_markdown(decision_dir / "considerations.md", metadata, f"# Legal Considerations\n\n{result.considerations}")
+        if "arguments" in missing_docs:
+            write_markdown(missing_docs["arguments"], metadata, f"# Legal Arguments\n\n{result.arguments}")
 
-        # Save judgment
-        write_markdown(decision_dir / "judgment.md", metadata, f"# Judgment\n\n{result.judgment}")
+        if "considerations" in missing_docs:
+            write_markdown(missing_docs["considerations"], metadata, f"# Legal Considerations\n\n{result.considerations}")
 
-        print(f"✓ Extracted decision to {decision_dir}")
+        if "judgment" in missing_docs:
+            write_markdown(missing_docs["judgment"], metadata, f"# Judgment\n\n{result.judgment}")
+
+        print(f"✓ Extracted {len(missing_docs)} document(s) to {decision_dir}")
     except Exception as e:
         print(f"✗ Error during structured extraction: {e}")
         print(f"  Full text was saved to {decision_dir / 'full_text.md'}")
