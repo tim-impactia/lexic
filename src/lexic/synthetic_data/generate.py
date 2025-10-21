@@ -52,7 +52,7 @@ class SyntheticCaseGenerator(dspy.Module):
         Returns:
             Dict with all generated synthetic case elements
         """
-        decision_context = f"{decision_data['parties']}\n\n{decision_data['facts_timeline']}\n\n{decision_data['judgment']}"
+        decision_context = f"{decision_data['parties']}\n\n{decision_data['facts_timeline']}"
 
         # Generate backwards from decision
         print("  Generating client persona...")

@@ -5,7 +5,6 @@ description: |
   - Résumé de la situation juridique du client
   - Objectifs du client (ce qu'il souhaite accomplir)
   - Contraintes (temps, budget, tolérance au risque)
-  - Questions juridiques à traiter
 
   IMPORTANT: Répondre entièrement en français.
 
@@ -15,4 +14,4 @@ input_fields:
 
 output_fields:
   situation:
-    desc: "Rapport de situation structuré avec: résumé, objectifs (liste à puces), contraintes (liste à puces), questions juridiques (liste à puces). Répondre entièrement en français."
+    desc: "Rapport de situation structuré avec: résumé, objectifs (liste à puces), contraintes (liste à puces). Répondre entièrement en français."

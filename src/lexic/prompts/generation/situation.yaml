@@ -14,4 +14,4 @@ input_fields:
 
 output_fields:
   situation:
-    desc: "Rapport de situation en français (résumé, objectifs, contraintes, questions juridiques). Si appel, objectifs du litige ORIGINAL, pas de l'appel."
+    desc: "Rapport de situation en français (résumé, objectifs, contraintes). Si appel, objectifs du litige ORIGINAL, pas de l'appel."

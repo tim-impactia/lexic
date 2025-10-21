@@ -7,10 +7,10 @@ description: |
 
 input_fields:
   decision_context:
-    desc: "Faits, parties et issue de la décision de justice. Si appel, se concentrer sur le litige ORIGINAL avant tout jugement."
+    desc: "Faits et parties de la décision de justice. Si appel, se concentrer sur le litige ORIGINAL avant tout jugement."
   party_role:
     desc: "Rôle de la partie: 'demandeur' (plaintiff) ou 'défendeur' (defendant)"
 
 output_fields:
   client_persona:
-    desc: "Persona du client en français (nom, contexte, résumé de situation, état émotionnel, objectifs, contraintes). Adapter au rôle: demandeur cherche réparation/gain, défendeur cherche à se défendre/éviter perte. Si appel, le client vient AVANT tout jugement."
+    desc: "Persona du client en français (nom, contexte, résumé de situation sans dates, état émotionnel, objectifs, contraintes). Adapter au rôle: demandeur cherche réparation/gain, défendeur cherche à se défendre/éviter perte. Si appel, le client vient AVANT tout jugement."

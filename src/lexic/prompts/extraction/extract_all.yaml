@@ -11,11 +11,13 @@ input_fields:
 
 output_fields:
   parties:
-    desc: "Liste des parties impliquées dans le litige ORIGINAL (demandeur, défendeur, etc.) - une par ligne. Si appel, identifier les parties du litige initial, pas leur rôle d'appelant/intimé. Répondre en français."
+    desc: "Liste des parties impliquées dans le litige ORIGINAL (demandeur, défendeur, etc.) - une par ligne. Dans une deuxième section lister toutes les informations utiles pour établir la personalité et les contextes personnels, professionels et familiaux du demandeur et du défendeur ainis que l'ambiance qui règne entre eux. Ne pas inclure de dates. Si appel, identifier les parties du litige initial, pas leur rôle d'appelant/intimé. Répondre en français."
   facts_timeline:
-    desc: "Liste chronologique des faits du LITIGE ORIGINAL avant tout jugement - un par ligne. Si appel, exclure les faits post-jugement première instance (l'appel lui-même, etc.). Répondre en français."
+    desc: "Liste chronologique des faits du LITIGE ORIGINAL avant tout jugement - un par ligne. Inclure tous les faits, même insignifiants et donner tous les détails. Si appel, exclure les faits post-jugement première instance (l'appel lui-même, etc.), mais inclure tous les faits certainement utilisés dans le jugement de première instance. Répondre en français."
+  evidence:
+    desc: "Liste structurée de tous les moyens de preuve (documents, témoignages, expertises, etc.) fournis par chaque partie. Pour chaque élément de preuve, indiquer: quelle partie l'a fourni, type de preuve, description, et pertinence. Organiser en sections par partie (demandeur, défendeur, etc.). Si appel, inclure les preuves du litige original. Répondre en français en markdown structuré."
   legal_bases:
-    desc: "Dispositions légales applicables au litige original (article, loi, contenu, pertinence) en markdown structuré. Si appel, inclure ce qui aurait été pertinent en première instance. Répondre en français."
+    desc: "Dispositions légales applicables au litige original (article, loi, contenu, pertinence) en markdown structuré. Inclure lois, jurisprudence et auteurs cités. Si appel, inclure ce qui aurait été pertinent en première instance. Répondre en français."
   arguments:
     desc: "Arguments juridiques du litige original (thèse, bases légales, support factuel, raisonnement) en markdown structuré. Si appel, reconstruire les arguments de première instance, pas uniquement ceux d'appel. Répondre en français."
   considerations:

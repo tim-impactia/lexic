@@ -8,10 +8,10 @@ input_fields:
   client_persona:
     desc: "Persona du client avec contexte, état émotionnel, style de communication"
   decision_context:
-    desc: "Faits et chronologie de la décision. Si appel, ignorer les faits post-jugement."
+    desc: "Faits et chronologie de la situation."
   party_role:
     desc: "Rôle de la partie: 'demandeur' ou 'défendeur'"
 
 output_fields:
   client_request:
-    desc: "Demande/email/message initial du client en français, dans sa voix, avec son niveau de détail et d'émotion. Adapter au rôle: demandeur demande aide pour obtenir réparation, défendeur demande aide pour se défendre. Doit refléter son persona. Si appel, le client vient AVANT tout jugement."
+    desc: "Demande/email/message initial du client en français, dans sa voix, avec son niveau de détail et d'émotion. Adapter au rôle: demandeur demande aide pour obtenir réparation, défendeur demande aide pour se défendre. Doit refléter son persona, rester relativement bref, éviter les dates et sans trop de structure. Si appel, le client vient AVANT tout jugement."
