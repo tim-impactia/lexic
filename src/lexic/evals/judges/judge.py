@@ -81,7 +81,12 @@ class LexicJudge(dspy.Module):
             rubric=self.rubric.to_text()
         )
 
+        # Ensure critical_errors is always a list
         critical_errors = error_result.critical_errors if error_result.critical_errors else []
+        if isinstance(critical_errors, str):
+            # If DSPy returns a string, split it into a list
+            # Assuming errors are separated by newlines or numbered
+            critical_errors = [e.strip() for e in critical_errors.split('\n') if e.strip()]
 
         # Compute weighted overall score
         overall_score = sum(
