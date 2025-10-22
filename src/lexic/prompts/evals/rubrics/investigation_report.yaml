@@ -1,0 +1,52 @@
+step_name: investigation_report
+
+dimensions:
+  - name: Completeness
+    description: Does the report answer all questions from the investigation order?
+    weight: 0.3
+    criteria:
+      1: Missing answers to multiple critical questions
+      2: Missing answers to some important questions
+      3: Most questions answered adequately
+      4: All important questions answered
+      5: All questions comprehensively answered with supporting details
+
+  - name: Accuracy
+    description: Are responses accurate and consistent with client persona and facts?
+    weight: 0.25
+    criteria:
+      1: Major inaccuracies or inconsistencies
+      2: Several minor inaccuracies
+      3: Mostly accurate with few minor errors
+      4: Accurate and consistent
+      5: Fully accurate with perfect consistency
+
+  - name: Realism
+    description: Does the client's response reflect realistic human behavior (imperfect memory, gaps)?
+    weight: 0.2
+    criteria:
+      1: Unrealistic responses (too perfect or too flawed)
+      2: Some unrealistic elements
+      3: Adequately realistic
+      4: Realistic client responses
+      5: Exceptionally realistic with appropriate gaps and uncertainties
+
+  - name: Document_Provision
+    description: Are document availability and gaps appropriately addressed?
+    weight: 0.15
+    criteria:
+      1: Document status poorly addressed
+      2: Document status partially addressed
+      3: Document status adequately addressed
+      4: Document status well-addressed
+      5: Document status comprehensively addressed with clear explanations
+
+  - name: Clarity
+    description: Are responses clear and well-structured?
+    weight: 0.1
+    criteria:
+      1: Responses unclear or poorly structured
+      2: Some clarity issues
+      3: Adequately clear
+      4: Clear and well-structured
+      5: Exceptionally clear and well-organized

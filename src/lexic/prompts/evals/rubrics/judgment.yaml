@@ -1,0 +1,52 @@
+step_name: judgment
+
+dimensions:
+  - name: Prediction_Accuracy
+    description: Is the predicted outcome realistic and well-reasoned?
+    weight: 0.3
+    criteria:
+      1: Prediction unrealistic or poorly reasoned
+      2: Prediction has significant weaknesses
+      3: Prediction generally realistic
+      4: Prediction realistic and well-reasoned
+      5: Prediction expertly reasoned with comprehensive analysis
+
+  - name: Legal_Justification
+    description: Are legal bases for the prediction properly articulated?
+    weight: 0.25
+    criteria:
+      1: Legal justification missing or incorrect
+      2: Legal justification weak or incomplete
+      3: Legal justification adequate
+      4: Legal justification strong and well-supported
+      5: Legal justification comprehensive and compelling
+
+  - name: Dispositif_Completeness
+    description: Does the dispositif cover all relevant points with reasoning?
+    weight: 0.2
+    criteria:
+      1: Missing multiple critical points
+      2: Missing some important points
+      3: Most relevant points covered
+      4: All important points covered with reasoning
+      5: Comprehensive dispositif with detailed reasoning
+
+  - name: Risk_and_Uncertainty
+    description: Are uncertainties and risks appropriately identified?
+    weight: 0.15
+    criteria:
+      1: Risks and uncertainties poorly identified
+      2: Some risks identified but incomplete
+      3: Risks adequately identified
+      4: Risks well-identified and assessed
+      5: Comprehensive risk assessment with nuanced analysis
+
+  - name: Quantification
+    description: Are monetary amounts and remedies appropriately quantified?
+    weight: 0.1
+    criteria:
+      1: Quantification missing or unrealistic
+      2: Quantification incomplete or questionable
+      3: Quantification adequate
+      4: Quantification well-reasoned
+      5: Quantification precise and thoroughly justified

@@ -1,0 +1,52 @@
+step_name: investigation_order
+
+dimensions:
+  - name: Completeness
+    description: Does the investigation order cover all necessary questions and documents?
+    weight: 0.3
+    criteria:
+      1: Missing multiple critical questions or document requests
+      2: Missing some important questions or documents
+      3: Most important questions and documents covered
+      4: Comprehensive with minor omissions
+      5: Fully comprehensive, all relevant questions and documents covered
+
+  - name: Relevance
+    description: Are questions and document requests relevant to the legal issues?
+    weight: 0.25
+    criteria:
+      1: Many irrelevant or unfocused questions
+      2: Some irrelevant questions or document requests
+      3: Mostly relevant with some tangents
+      4: Highly relevant and focused
+      5: Perfectly targeted to case issues
+
+  - name: Strategic_Focus
+    description: Do questions target critical gaps and strategic issues?
+    weight: 0.25
+    criteria:
+      1: Questions miss critical issues
+      2: Questions partially address key issues
+      3: Questions adequately address key issues
+      4: Questions strategically target critical gaps
+      5: Questions expertly identify and target all critical gaps
+
+  - name: Clarity
+    description: Are questions and requests clear and unambiguous?
+    weight: 0.15
+    criteria:
+      1: Questions unclear or ambiguous
+      2: Some clarity issues
+      3: Questions adequately clear
+      4: Questions clear and well-formulated
+      5: Questions exceptionally clear and precise
+
+  - name: Organization
+    description: Is the investigation order well-structured and organized?
+    weight: 0.05
+    criteria:
+      1: Poorly organized, difficult to follow
+      2: Some organizational issues
+      3: Adequately organized
+      4: Well-organized and logical
+      5: Exceptionally well-organized with clear priorities

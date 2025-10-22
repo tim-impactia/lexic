@@ -19,7 +19,11 @@ def main():
     parser.add_argument(
         "--step",
         default="all",
-        choices=["qualification", "initial_analysis", "factual_record", "legal_arguments", "recommendations", "all"],
+        choices=[
+            "qualification", "initial_analysis", "investigation_order", "investigation_report",
+            "factual_record", "legal_basis", "legal_arguments", "considerations",
+            "judgment", "recommendations", "all"
+        ],
         help="Pipeline step to evaluate (default: all)"
     )
     parser.add_argument(
@@ -36,8 +40,19 @@ def main():
 
     args = parser.parse_args()
 
-    # Define all available steps
-    all_steps = ["qualification", "initial_analysis", "factual_record", "legal_arguments", "recommendations"]
+    # Define all available steps (in pipeline order)
+    all_steps = [
+        "qualification",
+        "initial_analysis",
+        "investigation_order",
+        "investigation_report",
+        "factual_record",
+        "legal_basis",
+        "legal_arguments",
+        "considerations",
+        "judgment",
+        "recommendations"
+    ]
 
     # Determine which steps to run
     steps_to_run = all_steps if args.step == "all" else [args.step]

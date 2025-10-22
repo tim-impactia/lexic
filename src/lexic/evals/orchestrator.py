@@ -15,8 +15,13 @@ from lexic.evals.judges.judge import evaluate_output
 AGENT_REGISTRY = {
     "qualification": ("lexic.agents.qualification", "run_qualification"),
     "initial_analysis": ("lexic.agents.initial_analysis", "InitialAnalysisAgent"),
+    "investigation_order": ("lexic.agents.investigation_order", "InvestigationOrderAgent"),
+    "investigation_report": ("lexic.agents.investigation_report", "InvestigationReportAgent"),
     "factual_record": ("lexic.agents.factual_record", "FactualRecordAgent"),
+    "legal_basis": ("lexic.agents.legal_basis", "LegalBasisAgent"),
     "legal_arguments": ("lexic.agents.arguments", "ArgumentationAgent"),
+    "considerations": ("lexic.agents.considerations", "ConsiderationAgent"),
+    "judgment": ("lexic.agents.judgment", "JudgmentAgent"),
     "recommendations": ("lexic.agents.recommendations", "RecommendationAgent"),
 }
 
@@ -24,8 +29,13 @@ AGENT_REGISTRY = {
 STEP_INPUTS = {
     "qualification": ["01_client_request.md"],
     "initial_analysis": ["02_gt_initial_qualification.md"],
+    "investigation_order": ["03_gt_initial_analysis.md"],
+    "investigation_report": ["04_gt_initial_investigation_order.md", "00a_client_persona.md", "00b_initial_facts_known.md"],
     "factual_record": ["00b_initial_facts_known.md", "11_gt_final_investigation_report.md"],
+    "legal_basis": ["12_gt_final_factual_record.md"],
     "legal_arguments": ["12_gt_final_factual_record.md", "14_gt_final_legal_basis.md"],
+    "considerations": ["15_gt_final_legal_arguments.md", "12_gt_final_factual_record.md"],
+    "judgment": ["16_gt_considerations.md", "12_gt_final_factual_record.md"],
     "recommendations": ["16_gt_considerations.md", "17_gt_expected_judgment.md", "02_gt_initial_qualification.md"],
 }
 
@@ -33,8 +43,13 @@ STEP_INPUTS = {
 STEP_GROUND_TRUTH = {
     "qualification": "02_gt_initial_qualification.md",
     "initial_analysis": "03_gt_initial_analysis.md",
+    "investigation_order": "04_gt_initial_investigation_order.md",
+    "investigation_report": "11_gt_final_investigation_report.md",
     "factual_record": "12_gt_final_factual_record.md",
+    "legal_basis": "14_gt_final_legal_basis.md",
     "legal_arguments": "15_gt_final_legal_arguments.md",
+    "considerations": "16_gt_considerations.md",
+    "judgment": "17_gt_expected_judgment.md",
     "recommendations": "18_gt_recommendations.md",
 }
 
@@ -99,12 +114,18 @@ def load_step_inputs(case_dir: Path, step_name: str) -> Dict[str, str]:
                 inputs["client_objectives"] = content
             else:
                 inputs["qualification"] = content
+        elif "initial_analysis" in input_file:
+            inputs["initial_analysis"] = content
+        elif "investigation_order" in input_file:
+            inputs["investigation_order"] = content
         elif "investigation_report" in input_file:
             inputs["investigation_report"] = content
         elif "factual_record" in input_file:
             inputs["factual_record"] = content
         elif "legal_basis" in input_file:
             inputs["legal_basis"] = content
+        elif "legal_arguments" in input_file:
+            inputs["arguments"] = content  # Note: agent uses 'arguments' parameter
         elif "considerations" in input_file:
             inputs["considerations"] = content
         elif "judgment" in input_file:

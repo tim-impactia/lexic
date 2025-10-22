@@ -1,0 +1,52 @@
+step_name: legal_basis
+
+dimensions:
+  - name: Completeness
+    description: Are all relevant legal provisions identified?
+    weight: 0.35
+    criteria:
+      1: Missing multiple critical legal provisions
+      2: Missing some important provisions
+      3: Most relevant provisions identified
+      4: All important provisions identified
+      5: Comprehensive identification of all relevant provisions
+
+  - name: Accuracy
+    description: Are legal citations accurate and correctly referenced?
+    weight: 0.25
+    criteria:
+      1: Major citation errors or incorrect provisions
+      2: Several citation errors
+      3: Mostly accurate with minor errors
+      4: Accurate citations and references
+      5: Fully accurate with precise citations
+
+  - name: Applicability
+    description: Are identified provisions applicable to the factual record?
+    weight: 0.25
+    criteria:
+      1: Many provisions not applicable
+      2: Some provisions questionably applicable
+      3: Provisions generally applicable
+      4: Provisions clearly applicable
+      5: Provisions perfectly matched to facts
+
+  - name: Hierarchy_and_Context
+    description: Are provisions properly contextualized with relevant jurisprudence?
+    weight: 0.1
+    criteria:
+      1: Poor contextualization
+      2: Limited contextualization
+      3: Adequate contextualization
+      4: Good contextualization with relevant case law
+      5: Excellent contextualization with comprehensive legal context
+
+  - name: Organization
+    description: Are provisions well-organized and structured?
+    weight: 0.05
+    criteria:
+      1: Poorly organized
+      2: Some organizational issues
+      3: Adequately organized
+      4: Well-organized
+      5: Exceptionally clear organization

@@ -1,0 +1,52 @@
+step_name: considerations
+
+dimensions:
+  - name: Legal_Reasoning
+    description: Is the legal reasoning sound and well-developed?
+    weight: 0.35
+    criteria:
+      1: Legal reasoning contains major errors
+      2: Legal reasoning has significant weaknesses
+      3: Legal reasoning is generally sound
+      4: Legal reasoning is sound and well-developed
+      5: Legal reasoning is exceptionally thorough and rigorous
+
+  - name: Issue_Analysis
+    description: Are all critical legal issues analyzed?
+    weight: 0.25
+    criteria:
+      1: Missing multiple critical issues
+      2: Missing some important issues
+      3: Most critical issues analyzed
+      4: All critical issues well-analyzed
+      5: Comprehensive analysis of all issues with nuance
+
+  - name: Factual_Integration
+    description: Are facts properly integrated into legal analysis?
+    weight: 0.2
+    criteria:
+      1: Poor integration of facts and law
+      2: Limited factual integration
+      3: Adequate factual integration
+      4: Good factual integration
+      5: Excellent integration demonstrating clear fact-to-law connections
+
+  - name: Confidence_Assessment
+    description: Are confidence levels appropriately assessed for each consideration?
+    weight: 0.1
+    criteria:
+      1: Confidence assessments poorly calibrated
+      2: Some confidence issues
+      3: Confidence levels adequate
+      4: Confidence levels well-calibrated
+      5: Confidence levels expertly calibrated with clear reasoning
+
+  - name: Structure_and_Clarity
+    description: Are considerations well-structured and clearly presented?
+    weight: 0.1
+    criteria:
+      1: Poorly structured or unclear
+      2: Some structural or clarity issues
+      3: Adequately structured and clear
+      4: Well-structured and clear
+      5: Exceptionally clear with logical flow
