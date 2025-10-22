@@ -6,6 +6,7 @@ from pathlib import Path
 from lexic.agents.qualification import QualificationAgent
 from lexic.agents.initial_analysis import InitialAnalysisAgent
 from lexic.agents.investigation_order import InvestigationOrderAgent
+from lexic.agents.investigation_report import InvestigationReportAgent
 from lexic.agents.factual_record import FactualRecordAgent
 from lexic.agents.legal_basis import LegalBasisAgent
 from lexic.agents.arguments import ArgumentationAgent
@@ -25,6 +26,7 @@ class LexicPipeline:
         self.qualification_agent = QualificationAgent()
         self.initial_analysis_agent = InitialAnalysisAgent()
         self.investigation_order_agent = InvestigationOrderAgent()
+        self.investigation_report_agent = InvestigationReportAgent()
         self.factual_record_agent = FactualRecordAgent()
         self.legal_basis_agent = LegalBasisAgent()
         self.argumentation_agent = ArgumentationAgent()
@@ -65,7 +67,7 @@ class LexicPipeline:
     def run_investigation_phase(
         self,
         initial_analysis: str,
-        investigation_report: str,
+        client_persona: str,
         initial_facts: str
     ) -> Dict[str, str]:
         """
@@ -73,18 +75,25 @@ class LexicPipeline:
 
         Args:
             initial_analysis: Initial legal analysis
-            investigation_report: Client's response to investigation
+            client_persona: Client profile and context
             initial_facts: Initial facts from intake
 
         Returns:
-            Dict with investigation_order and factual_record
+            Dict with investigation_order, investigation_report, and factual_record
         """
         # Step 3: Investigation order
         investigation_order = self.investigation_order_agent(
             initial_analysis=initial_analysis
         )
 
-        # Step 4: Factual record (after investigation)
+        # Step 4: Investigation report (simulated client responses)
+        investigation_report = self.investigation_report_agent(
+            investigation_order=investigation_order,
+            client_persona=client_persona,
+            initial_facts=initial_facts
+        )
+
+        # Step 5: Factual record (after investigation)
         factual_record = self.factual_record_agent(
             initial_facts=initial_facts,
             investigation_report=investigation_report
@@ -92,6 +101,7 @@ class LexicPipeline:
 
         return {
             "investigation_order": investigation_order,
+            "investigation_report": investigation_report,
             "factual_record": factual_record
         }
 
@@ -169,7 +179,6 @@ class LexicPipeline:
         self,
         client_persona: str,
         initial_facts: str,
-        investigation_report: str,
         judgment: Optional[str] = None
     ) -> Dict[str, str]:
         """
@@ -178,7 +187,6 @@ class LexicPipeline:
         Args:
             client_persona: Client background and context
             initial_facts: Initial facts from client
-            investigation_report: Client's response to investigation
             judgment: Optional judgment (for final recommendations)
 
         Returns:
@@ -187,10 +195,10 @@ class LexicPipeline:
         # Phase 1: Intake to analysis
         phase1 = self.run_intake_to_analysis(client_persona, initial_facts)
 
-        # Phase 2: Investigation
+        # Phase 2: Investigation (now generates investigation_report automatically)
         phase2 = self.run_investigation_phase(
             phase1["initial_analysis"],
-            investigation_report,
+            client_persona,
             initial_facts
         )
 

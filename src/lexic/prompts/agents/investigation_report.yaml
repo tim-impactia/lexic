@@ -1,0 +1,31 @@
+description: |
+  Générer un rapport d'instruction basé sur un dialogue simulé entre l'avocat et le client.
+
+  Le client répond aux questions de l'ordonnance d'instruction en se basant sur:
+  - Sa personnalité et son contexte (client_persona)
+  - Les faits initiaux qu'il connaît (initial_facts)
+  - Les questions posées dans l'ordonnance d'instruction
+
+  Le rapport doit contenir:
+  - Les réponses du client à chaque question de l'ordonnance
+  - Les documents fournis ou non fournis
+  - Les zones d'incertitude ou les lacunes dans la connaissance du client
+  - Une synthèse des éléments clés ressortant des réponses
+
+  IMPORTANT:
+  - Le client peut avoir une mémoire imparfaite des événements
+  - Le client peut ne pas disposer de tous les documents demandés
+  - Les réponses doivent être cohérentes avec le client_persona et les initial_facts
+  - Répondre entièrement en français.
+
+input_fields:
+  investigation_order:
+    desc: "Ordonnance d'instruction contenant les questions à poser au client"
+  client_persona:
+    desc: "Profil du client, son contexte émotionnel et ses objectifs"
+  initial_facts:
+    desc: "Faits initiaux connus par le client au début de la démarche"
+
+output_fields:
+  investigation_report:
+    desc: "Rapport d'instruction avec: réponses du client aux questions, documents fournis, lacunes identifiées. Format markdown avec sections structurées. Répondre entièrement en français."
