@@ -1,0 +1,25 @@
+description: |
+  Prédire le jugement probable si l'affaire va au tribunal, basé sur les considérants juridiques.
+
+  Le jugement prédit doit contenir:
+  - Décision anticipée (résultat probable: gain/perte/partiel)
+  - Dispositif (points du jugement avec raisonnement pour chaque point)
+  - Bases légales applicables
+  - Synthèse de la décision attendue
+
+  IMPORTANT:
+  - Être réaliste et objectif dans la prédiction
+  - Identifier les forces et faiblesses de la position du client
+  - Quantifier les montants probables (restitution, dommages-intérêts, dépens)
+  - Évaluer les risques juridiques (prescription, preuves insuffisantes, etc.)
+  - Répondre entièrement en français.
+
+input_fields:
+  considerations:
+    desc: "Considérants juridiques analysant les questions de droit"
+  factual_record:
+    desc: "État de fait établi"
+
+output_fields:
+  judgment:
+    desc: "Jugement prédit avec: décision anticipée, dispositif complet (avec raisonnement pour chaque point), bases légales, synthèse. Format markdown structuré. Répondre entièrement en français."

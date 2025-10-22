@@ -8,6 +8,7 @@ from lexic.agents.factual_record import FactualRecordAgent
 from lexic.agents.legal_basis import LegalBasisAgent
 from lexic.agents.arguments import ArgumentationAgent
 from lexic.agents.considerations import ConsiderationAgent
+from lexic.agents.judgment import JudgmentAgent
 from lexic.agents.recommendations import RecommendationAgent
 from lexic.agents.pipeline import LexicPipeline
 
@@ -20,6 +21,7 @@ __all__ = [
     "LegalBasisAgent",
     "ArgumentationAgent",
     "ConsiderationAgent",
+    "JudgmentAgent",
     "RecommendationAgent",
     "LexicPipeline",
 ]

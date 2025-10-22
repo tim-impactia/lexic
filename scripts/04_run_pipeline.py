@@ -31,28 +31,19 @@ def run_pipeline_on_case(case_dir: Path, output_dir: Path) -> dict:
     _, client_persona = load_case_step(case_dir, "00a_client_persona.md")
     _, initial_facts = load_case_step(case_dir, "00b_initial_facts_known.md")
 
-    # Optional: load judgment if available
-    judgment = None
-    judgment_path = case_dir / "17_gt_expected_judgment.md"
-    if judgment_path.exists():
-        _, judgment = load_case_step(case_dir, "17_gt_expected_judgment.md")
-
     print(f"Running pipeline for case: {case_dir.name}")
     print(f"  Client persona loaded: {len(client_persona)} chars")
     print(f"  Initial facts loaded: {len(initial_facts)} chars")
-    if judgment:
-        print(f"  Judgment loaded: {len(judgment)} chars")
     print()
 
     # Initialize pipeline
     pipeline = LexicPipeline()
 
-    # Run full pipeline
+    # Run full pipeline (includes judgment prediction)
     print("Running full pipeline...")
     results = pipeline.run_full_pipeline(
         client_persona=client_persona,
-        initial_facts=initial_facts,
-        judgment=judgment
+        initial_facts=initial_facts
     )
 
     # Save outputs
@@ -75,6 +66,7 @@ def run_pipeline_on_case(case_dir: Path, output_dir: Path) -> dict:
         "legal_basis": "pred_legal_basis.md",
         "legal_arguments": "pred_legal_arguments.md",
         "considerations": "pred_considerations.md",
+        "judgment": "pred_judgment.md",
         "recommendations": "pred_recommendations.md",
     }
 

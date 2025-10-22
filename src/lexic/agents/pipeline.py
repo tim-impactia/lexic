@@ -1,6 +1,6 @@
 """Full orchestrated pipeline for Lexic legal AI system."""
 
-from typing import Dict, Optional
+from typing import Dict
 from pathlib import Path
 
 from lexic.agents.qualification import QualificationAgent
@@ -11,6 +11,7 @@ from lexic.agents.factual_record import FactualRecordAgent
 from lexic.agents.legal_basis import LegalBasisAgent
 from lexic.agents.arguments import ArgumentationAgent
 from lexic.agents.considerations import ConsiderationAgent
+from lexic.agents.judgment import JudgmentAgent
 from lexic.agents.recommendations import RecommendationAgent
 
 
@@ -31,6 +32,7 @@ class LexicPipeline:
         self.legal_basis_agent = LegalBasisAgent()
         self.argumentation_agent = ArgumentationAgent()
         self.consideration_agent = ConsiderationAgent()
+        self.judgment_agent = JudgmentAgent()
         self.recommendation_agent = RecommendationAgent()
 
     def run_intake_to_analysis(
@@ -139,19 +141,19 @@ class LexicPipeline:
         legal_arguments: str,
         factual_record: str,
         client_objectives: str,
-        judgment: Optional[str] = None
+        use_predicted_judgment: bool = True
     ) -> Dict[str, str]:
         """
-        Run final phase: considerations and recommendations.
+        Run final phase: considerations, judgment prediction, and recommendations.
 
         Args:
             legal_arguments: Legal arguments
             factual_record: Factual record
             client_objectives: Client objectives from qualification
-            judgment: Optional judgment (can be predicted or actual)
+            use_predicted_judgment: Whether to predict judgment (default: True)
 
         Returns:
-            Dict with considerations and recommendations
+            Dict with considerations, judgment, and recommendations
         """
         # Step 7: Legal considerations
         considerations = self.consideration_agent(
@@ -159,27 +161,35 @@ class LexicPipeline:
             factual_record=factual_record
         )
 
-        # If no judgment provided, use considerations as judgment
-        if judgment is None:
-            judgment = considerations
+        # Step 8: Predict judgment
+        judgment = None
+        if use_predicted_judgment:
+            judgment = self.judgment_agent(
+                considerations=considerations,
+                factual_record=factual_record
+            )
 
-        # Step 8: Recommendations
+        # Step 9: Recommendations
         recommendations = self.recommendation_agent(
             considerations=considerations,
-            judgment=judgment,
+            judgment=judgment if judgment else considerations,
             client_objectives=client_objectives
         )
 
-        return {
+        result = {
             "considerations": considerations,
             "recommendations": recommendations
         }
 
+        if judgment:
+            result["judgment"] = judgment
+
+        return result
+
     def run_full_pipeline(
         self,
         client_persona: str,
-        initial_facts: str,
-        judgment: Optional[str] = None
+        initial_facts: str
     ) -> Dict[str, str]:
         """
         Run the complete pipeline from intake to recommendations.
@@ -187,15 +197,14 @@ class LexicPipeline:
         Args:
             client_persona: Client background and context
             initial_facts: Initial facts from client
-            judgment: Optional judgment (for final recommendations)
 
         Returns:
-            Dict with all pipeline outputs
+            Dict with all pipeline outputs including predicted judgment
         """
         # Phase 1: Intake to analysis
         phase1 = self.run_intake_to_analysis(client_persona, initial_facts)
 
-        # Phase 2: Investigation (now generates investigation_report automatically)
+        # Phase 2: Investigation (generates investigation_report automatically)
         phase2 = self.run_investigation_phase(
             phase1["initial_analysis"],
             client_persona,
@@ -205,12 +214,12 @@ class LexicPipeline:
         # Phase 3: Legal analysis
         phase3 = self.run_legal_analysis(phase2["factual_record"])
 
-        # Phase 4: Final phase
+        # Phase 4: Final phase (considerations, judgment prediction, recommendations)
         phase4 = self.run_final_phase(
             phase3["legal_arguments"],
             phase2["factual_record"],
             phase1["qualification"],
-            judgment
+            use_predicted_judgment=True
         )
 
         # Combine all results
