@@ -37,7 +37,7 @@ class Qualification:
 class InitialAnalysis:
     """Initial legal analysis based on qualification."""
     legal_domain: str
-    potential_legal_bases: List[str]
+    potential_legal_basis: List[str]
     preliminary_assessment: str
     investigation_needs: List[str]
     complexity_assessment: str
@@ -83,7 +83,7 @@ class LegalBasis:
 class LegalArgument:
     """Legal argument for the case."""
     thesis: str
-    legal_bases: List[str]
+    legal_basis: List[str]
     factual_support: List[str]
     reasoning: str
 
@@ -102,7 +102,7 @@ class Judgment:
     """Final legal judgment."""
     decision: str
     reasoning: str
-    legal_bases: List[str]
+    legal_basis: List[str]
 
 
 @dataclass
@@ -124,7 +124,7 @@ class CourtDecision:
     case_number: str
     parties: List[str]
     facts_timeline: List[str]
-    legal_bases: List[LegalBasis]
+    legal_basis: List[LegalBasis]
     arguments: List[LegalArgument]
     considerations: List[Consideration]
     judgment: Judgment
@@ -144,7 +144,7 @@ class SyntheticCase:
     gt_investigation_report_1: InvestigationReport
     gt_initial_factual_record: FactualRecord
     gt_final_factual_record: FactualRecord
-    gt_applicable_legal_bases: List[LegalBasis]
+    gt_applicable_legal_basis: List[LegalBasis]
     gt_legal_arguments: List[LegalArgument]
     gt_considerations: List[Consideration]
     gt_judgment: Judgment

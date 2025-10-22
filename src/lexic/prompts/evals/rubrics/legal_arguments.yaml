@@ -22,14 +22,14 @@ dimensions:
       5: Arguments have comprehensive and precise factual support
 
   - name: Legal_Basis_Application
-    description: Are legal bases correctly applied?
+    description: Is legal basis correctly applied?
     weight: 0.25
     criteria:
-      1: Legal bases misapplied or missing
-      2: Legal bases partially or imprecisely applied
-      3: Legal bases adequately applied
-      4: Legal bases well-applied
-      5: Legal bases expertly and precisely applied
+      1: Legal basis misapplied or missing
+      2: Legal basis partially or imprecisely applied
+      3: Legal basis adequately applied
+      4: Legal basis well-applied
+      5: Legal basis expertly and precisely applied
 
   - name: Reasoning_Quality
     description: Is the reasoning connecting facts to conclusions clear and logical?

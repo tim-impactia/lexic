@@ -22,6 +22,7 @@ GenerateInitialAnalysis = create_signature("generation", "initial_analysis")
 GenerateInvestigationOrder = create_signature("generation", "investigation_order")
 GenerateInvestigationReport = create_signature("generation", "investigation_report")
 GenerateFactualRecord = create_signature("generation", "factual_record")
+GenerateExpectedJudgment = create_signature("generation", "expected_judgment")
 GenerateRecommendations = create_signature("generation", "recommendations")
 
 
@@ -37,8 +38,8 @@ class SyntheticCaseGenerator(dspy.Module):
         self.gen_initial_analysis = dspy.ChainOfThought(GenerateInitialAnalysis)
         self.gen_investigation_order = dspy.ChainOfThought(GenerateInvestigationOrder)
         self.gen_investigation_report = dspy.ChainOfThought(GenerateInvestigationReport)
-        self.gen_initial_factual_record = dspy.ChainOfThought(GenerateFactualRecord)
         self.gen_final_factual_record = dspy.ChainOfThought(GenerateFactualRecord)
+        self.gen_expected_judgment = dspy.ChainOfThought(GenerateExpectedJudgment)
         self.gen_recommendations = dspy.ChainOfThought(GenerateRecommendations)
 
     def forward(self, decision_data: dict):
@@ -47,7 +48,7 @@ class SyntheticCaseGenerator(dspy.Module):
 
         Args:
             decision_data: Dict with keys: full_text, parties, facts_timeline,
-                          legal_bases, arguments, considerations, judgment
+                          legal_basis, arguments, considerations, judgment
 
         Returns:
             Dict with all generated synthetic case elements
@@ -80,7 +81,7 @@ class SyntheticCaseGenerator(dspy.Module):
         print("  Generating initial analysis...")
         initial_analysis = self.gen_initial_analysis(
             qualification=qualification.qualification,
-            decision_legal_bases=decision_data['legal_bases']
+            decision_legal_basis=decision_data['legal_basis']
         )
 
         print("  Generating investigation order...")
@@ -143,7 +144,7 @@ def load_decision_data(decision_dir: Path) -> dict:
     _, full_text = read_markdown(decision_dir / "full_text.md")
     _, parties = read_markdown(decision_dir / "parties.md")
     _, facts = read_markdown(decision_dir / "facts_timeline.md")
-    _, legal_bases = read_markdown(decision_dir / "legal_bases.md")
+    _, legal_basis = read_markdown(decision_dir / "legal_basis.md")
     _, arguments = read_markdown(decision_dir / "arguments.md")
     _, considerations = read_markdown(decision_dir / "considerations.md")
     _, judgment = read_markdown(decision_dir / "judgment.md")
@@ -152,7 +153,7 @@ def load_decision_data(decision_dir: Path) -> dict:
         "full_text": full_text,
         "parties": parties,
         "facts_timeline": facts,
-        "legal_bases": legal_bases,
+        "legal_basis": legal_basis,
         "arguments": arguments,
         "considerations": considerations,
         "judgment": judgment
@@ -225,107 +226,123 @@ def generate_synthetic_case(decision_id: str, case_id: str, party_role: str, dec
     # Save metadata
     save_if_missing("metadata.md", "Case Metadata", f"Source: {decision_id}")
 
-    # Generate and save incrementally
+    # ========== PHASE 0: CLIENT CONTEXT (00a-00b) ==========
+    # These are inputs that represent what the client knows/brings
+
     client_persona = save_if_missing(
-        "01_client_persona.md", "Client Persona", "",
+        "00a_client_persona.md", "Client Persona", "",
         lambda: generator.gen_persona(
             decision_context=decision_context,
             party_role=party_role
         ).client_persona,
-        doc_number="01"
-    )
-
-    client_request = save_if_missing(
-        "01b_client_request.md", "Client Request", "",
-        lambda: generator.gen_client_request(
-            client_persona=client_persona,
-            decision_context=decision_context,
-            party_role=party_role
-        ).client_request,
-        doc_number="01b"
+        doc_number="00a"
     )
 
     initial_facts = save_if_missing(
-        "02_initial_facts_known.md", "Initial Facts", "",
+        "00b_initial_facts_known.md", "Initial Facts Known to Client", "",
         lambda: generator.gen_initial_facts(
             decision_context=decision_data['facts_timeline'],
             client_persona=client_persona,
             party_role=party_role
         ).initial_facts,
-        doc_number="02"
+        doc_number="00b"
+    )
+
+    # ========== PHASE 1: INITIAL WORKFLOW (01-04) ==========
+    # Based only on client request and initial understanding
+
+    client_request = save_if_missing(
+        "01_client_request.md", "Ground Truth: Client Request", "",
+        lambda: generator.gen_client_request(
+            client_persona=client_persona,
+            initial_facts=initial_facts,
+            party_role=party_role
+        ).client_request,
+        doc_number="01"
     )
 
     qualification = save_if_missing(
-        "03_gt_qualification.md", "Ground Truth: Qualification", "",
+        "02_gt_initial_qualification.md", "Ground Truth: Initial Qualification", "",
         lambda: generator.gen_qualification(
-            client_persona=client_persona,
-            initial_facts=initial_facts,
+            client_request=client_request,
             decision_context=decision_context
         ).qualification,
-        doc_number="03"
+        doc_number="02"
     )
 
     initial_analysis = save_if_missing(
-        "04_gt_initial_analysis.md", "Ground Truth: Initial Analysis", "",
+        "03_gt_initial_analysis.md", "Ground Truth: Initial Analysis", "",
         lambda: generator.gen_initial_analysis(
-            qualification=qualification,
-            decision_legal_bases=decision_data['legal_bases']
+            client_request=client_request,
+            decision_legal_basis=decision_data['legal_basis']
         ).initial_analysis,
-        doc_number="04"
+        doc_number="03"
     )
 
     investigation_order = save_if_missing(
-        "05_gt_investigation_order_1.md", "Ground Truth: Investigation Order", "",
+        "04_gt_initial_investigation_order.md", "Ground Truth: Initial Investigation Order", "",
         lambda: generator.gen_investigation_order(
             initial_analysis=initial_analysis,
-            decision_facts=decision_data['facts_timeline']
+            decision_facts=decision_data['facts_timeline'],
+            decision_legal_basis=decision_data['legal_basis'],
+            decision_arguments=decision_data['arguments']
         ).investigation_order,
-        doc_number="05"
+        doc_number="04"
     )
+
+    # ========== PHASE 2: SKIP INTERMEDIATE STEPS (05-10) ==========
+    # These would be: investigation report, initial factual record,
+    # intermediary qualification, initial legal basis, initial arguments, etc.
+    # Skipping for now as requested
+
+    # ========== PHASE 3: FINAL INVESTIGATION & RECORDS (11-12) ==========
 
     investigation_report = save_if_missing(
-        "06_gt_investigation_report_1.md", "Ground Truth: Investigation Report", "",
+        "11_gt_final_investigation_report.md", "Ground Truth: Final Investigation Report", "",
         lambda: generator.gen_investigation_report(
             investigation_order=investigation_order,
-            decision_facts=decision_data['facts_timeline']
+            client_persona=client_persona,
+            initial_facts=initial_facts
         ).investigation_report,
-        doc_number="06"
-    )
-
-    initial_factual_record = save_if_missing(
-        "09_gt_initial_factual_record.md", "Ground Truth: Initial Factual Record", "",
-        lambda: generator.gen_initial_factual_record(
-            initial_facts=initial_facts,
-            investigation_report="",
-            decision_facts=decision_data['facts_timeline']
-        ).factual_record,
-        doc_number="09"
+        doc_number="11"
     )
 
     final_factual_record = save_if_missing(
-        "10_gt_final_factual_record.md", "Ground Truth: Final Factual Record", "",
+        "12_gt_final_factual_record.md", "Ground Truth: Final Factual Record", "",
         lambda: generator.gen_final_factual_record(
             initial_facts=initial_facts,
             investigation_report=investigation_report,
             decision_facts=decision_data['facts_timeline']
         ).factual_record,
-        doc_number="10"
+        doc_number="12"
     )
 
-    # Copy decision data (these don't need generation)
-    save_if_missing("11_gt_applicable_legal_bases.md", "Ground Truth: Legal Bases", decision_data['legal_bases'], doc_number="11")
-    save_if_missing("12_gt_legal_arguments.md", "Ground Truth: Legal Arguments", decision_data['arguments'], doc_number="12")
-    save_if_missing("13_gt_considerations.md", "Ground Truth: Considerations", decision_data['considerations'], doc_number="13")
-    save_if_missing("14_gt_judgment.md", "Ground Truth: Judgment", decision_data['judgment'], doc_number="14")
+    # ========== PHASE 4: LEGAL ANALYSIS FROM COURT CASE (14-17) ==========
+    # These are directly taken from court case extraction
+
+    save_if_missing("14_gt_final_legal_basis.md", "Ground Truth: Final Legal Basis", decision_data['legal_basis'], doc_number="14")
+    save_if_missing("15_gt_final_legal_arguments.md", "Ground Truth: Final Legal Arguments", decision_data['arguments'], doc_number="15")
+    save_if_missing("16_gt_considerations.md", "Ground Truth: Considerations", decision_data['considerations'], doc_number="16")
+
+    # Rewrite judgment to appear as expected result (not post-judgment)
+    expected_judgment = save_if_missing(
+        "17_gt_expected_judgment.md", "Ground Truth: Expected Judgment", "",
+        lambda: generator.gen_expected_judgment(
+            judgment=decision_data['judgment']
+        ).expected_judgment,
+        doc_number="17"
+    )
+
+    # ========== PHASE 5: RECOMMENDATIONS (18) ==========
 
     recommendations = save_if_missing(
-        "15_gt_recommendations.md", "Ground Truth: Recommendations", "",
+        "18_gt_recommendations.md", "Ground Truth: Recommendations", "",
         lambda: generator.gen_recommendations(
-            judgment=decision_data['judgment'],
+            expected_judgment=expected_judgment,
             considerations=decision_data['considerations'],
             client_objectives=qualification
         ).recommendations,
-        doc_number="15"
+        doc_number="18"
     )
 
     print(f"✓ Synthetic case complete at {case_dir}")

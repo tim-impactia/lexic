@@ -14,7 +14,7 @@ input_fields:
   initial_facts:
     desc: "Faits initiaux de la prise de contact avec le client"
   investigation_report:
-    desc: "Rapport d'investigation avec des faits supplémentaires (vide si aucun)"
+    desc: "Rapport d'instruction avec des faits supplémentaires (vide si aucun)"
 
 output_fields:
   factual_record:

@@ -1,15 +1,18 @@
 description: |
-  Générer le rapport d'investigation du client.
+  Générer le rapport d'instruction - les réponses du client aux questions.
   IMPORTANT: Répondre en français.
 
-  Si appel: Rapport du client avec les faits du litige ORIGINAL.
+  Le rapport doit répondre UNIQUEMENT aux questions de l'ordonnance d'instruction,
+  basé sur ce que le client sait (persona + faits initiaux connus).
 
 input_fields:
   investigation_order:
-    desc: "Ordre d'investigation"
-  decision_facts:
-    desc: "Faits de la décision. Si appel, faits du litige ORIGINAL uniquement."
+    desc: "Questions et demandes de l'ordonnance d'instruction"
+  client_persona:
+    desc: "Persona du client pour comprendre comment il répondrait"
+  initial_facts:
+    desc: "Faits initiaux que le client connaissait déjà - peut servir de base pour les réponses"
 
 output_fields:
   investigation_report:
-    desc: "Rapport d'investigation en français (réponses, documents obtenus, lacunes restantes). Si appel, uniquement les faits du litige ORIGINAL."
+    desc: "Rapport d'instruction en français avec les réponses du client aux questions posées. Réponses basées UNIQUEMENT sur ce que le client peut savoir (persona + faits initiaux). Peut inclure: réponses aux questions, documents fournis, clarifications, et éventuellement des lacunes si le client ne sait pas certaines choses."

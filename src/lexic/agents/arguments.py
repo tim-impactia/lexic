@@ -14,19 +14,19 @@ class ArgumentationAgent(dspy.Module):
         super().__init__()
         self.develop = dspy.ChainOfThought(DevelopArguments)
 
-    def forward(self, factual_record: str, legal_bases: str) -> str:
+    def forward(self, factual_record: str, legal_basis: str) -> str:
         """
         Develop legal arguments.
 
         Args:
             factual_record: Factual record
-            legal_bases: Legal bases
+            legal_basis: Legal basis
 
         Returns:
             Legal arguments as markdown text
         """
         result = self.develop(
             factual_record=factual_record,
-            legal_bases=legal_bases
+            legal_basis=legal_basis
         )
         return result.arguments

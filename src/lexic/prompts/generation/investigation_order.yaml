@@ -1,15 +1,21 @@
 description: |
-  Générer l'ordre d'investigation.
+  Générer l'ordonnance d'instruction basée sur l'analyse initiale.
   IMPORTANT: Répondre en français.
 
-  Si appel: Investigation pour préparer le dossier du litige ORIGINAL.
+  L'ordonnance d'instruction doit identifier les questions à poser au client pour compléter
+  le dossier. L'avocat comprend le jugement, les bases légales et l'argumentation finale
+  pour savoir quelles questions sont pertinentes.
 
 input_fields:
   initial_analysis:
-    desc: "Analyse juridique initiale"
+    desc: "Analyse juridique initiale basée sur la demande client"
   decision_facts:
-    desc: "Faits de la décision. Si appel, faits du litige ORIGINAL uniquement."
+    desc: "Chronologie complète des faits de la décision pour comprendre quels éléments seront nécessaires"
+  decision_legal_basis:
+    desc: "Bases légales de la décision pour comprendre quels faits sont juridiquement pertinents"
+  decision_arguments:
+    desc: "Arguments de la décision pour comprendre quels faits doivent être établis"
 
 output_fields:
   investigation_order:
-    desc: "Ordre d'investigation en français (objectif, questions, documents demandés). Si appel, chercher les éléments pour préparer le litige ORIGINAL."
+    desc: "Ordonnance d'instruction en français (objectif, questions spécifiques à poser au client, documents à demander, éléments à clarifier). Les questions doivent viser à obtenir les faits qui seront nécessaires pour l'argumentation finale."

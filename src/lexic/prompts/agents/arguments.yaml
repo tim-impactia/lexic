@@ -12,7 +12,7 @@ description: |
 input_fields:
   factual_record:
     desc: "État de fait du cas"
-  legal_bases:
+  legal_basis:
     desc: "Dispositions légales applicables"
 
 output_fields:

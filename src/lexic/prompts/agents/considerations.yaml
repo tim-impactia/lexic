@@ -1,7 +1,7 @@
 description: |
-  Analyser les considérations juridiques à partir des arguments et de l'état de fait.
+  Analyser les considérants en droit à partir des arguments et de l'état de fait.
 
-  Pour chaque considération, fournir:
+  Pour chaque considérant, fournir:
   - Question examinée
   - Analyse de la question
   - Conclusion
@@ -17,4 +17,4 @@ input_fields:
 
 output_fields:
   considerations:
-    desc: "Considérations juridiques, chacune avec: question, analyse, conclusion, niveau de confiance. Répondre entièrement en français."
+    desc: "Considérants en droit, chacun avec: question, analyse, conclusion, niveau de confiance. Répondre entièrement en français."

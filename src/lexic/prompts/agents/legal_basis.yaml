@@ -14,5 +14,5 @@ input_fields:
     desc: "État de fait du cas"
 
 output_fields:
-  legal_bases:
+  legal_basis:
     desc: "Bases légales applicables, chacune avec: article, nom de la loi, contenu, pertinence. Répondre entièrement en français."

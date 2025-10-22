@@ -1,0 +1,17 @@
+description: |
+  Réécrire le jugement pour qu'il apparaisse comme un résultat attendu/anticipé.
+  IMPORTANT: Répondre en français.
+
+  Transformer le jugement de la décision (qui est écrit au passé, post-jugement)
+  en une anticipation de ce qui pourrait être le résultat (futur/conditionnel).
+
+  Cela permet d'utiliser ce jugement pour générer des recommandations comme si
+  on anticipait le résultat, plutôt que de réagir à un jugement déjà rendu.
+
+input_fields:
+  judgment:
+    desc: "Jugement de la décision (écrit au passé, comme fait accompli)"
+
+output_fields:
+  expected_judgment:
+    desc: "Jugement réécrit en français comme résultat attendu/anticipé (futur ou conditionnel). Garder le même contenu et les mêmes conclusions, mais reformuler pour présenter cela comme une anticipation plutôt qu'un fait accompli."

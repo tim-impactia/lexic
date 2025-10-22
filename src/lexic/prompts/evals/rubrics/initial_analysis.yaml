@@ -11,15 +11,15 @@ dimensions:
       4: Accurate and appropriately specific
       5: Perfectly accurate and precise
 
-  - name: Legal_Bases_Identification
-    description: Are potential legal bases correctly identified?
+  - name: Legal_Basis_Identification
+    description: Is potential legal basis correctly identified?
     weight: 0.3
     criteria:
-      1: Missing most relevant legal bases
-      2: Missing several important legal bases
-      3: Most relevant legal bases identified
-      4: All important legal bases identified
-      5: Comprehensive and precise identification of all relevant legal bases
+      1: Missing most relevant legal basis
+      2: Missing several important legal basis elements
+      3: Most relevant legal basis identified
+      4: All important legal basis identified
+      5: Comprehensive and precise identification of all relevant legal basis
 
   - name: Assessment_Quality
     description: Is the preliminary assessment sound and helpful?

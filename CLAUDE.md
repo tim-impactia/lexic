@@ -8,24 +8,25 @@ This is the evaluation framework for Lexic, a legal AI SaaS that replicates how 
 
 We're building a multi-agent system that follows the actual legal workflow:
 
-1. **Client Dialogue → Qualification Report** (situation/objectives/constraints)
-2. **Qualification Report → Initial Legal Analysis**
-3. **Initial Legal Analysis → Investigation Order**
+1. **Client Request → Initial Qualification** (situation/objectives/constraints)
+2. **Initial Qualification → Initial Legal Analysis**
+3. **Initial Legal Analysis → Initial Investigation Order**
 4. **Investigation Order → Client Dialogue → Investigation Report**
-5. **Investigation Report → Factual Record**
-6. **Factual Record → Update situation/objectives/constraints**
-7. **Factual Record → Applicable Legal Bases**
-8. **Factual Record + Legal Bases → Legal Arguments**
-9. **Arguments → Incomplete facts? → Investigation Order** (loop back if needed)
-10. **Arguments + Factual Record → Legal Considerations + Judgment**
-11. **Considerations + Judgment → Recommendations**
+5. **Investigation Report + Initial Facts → Final Factual Record**
+6. **Factual Record → Applicable Legal Basis**
+7. **Factual Record + Legal Basis → Legal Arguments**
+8. **Arguments + Factual Record → Legal Considerations**
+9. **Considerations → Expected Judgment**
+10. **Expected Judgment + Considerations → Recommendations**
+
+Note: For evaluation purposes, we may skip intermediate steps (e.g., initial factual record, intermediary qualification) to focus on key transitions.
 
 ## Evaluation Strategy
 
 Since we don't have ground truth data for each step, we're creating synthetic data by working backwards from real court decisions:
 
 1. Take a court decision (PDF)
-2. Extract structured elements (parties, facts, legal bases, arguments, considerations, judgment)
+2. Extract structured elements (parties, facts, legal basis, arguments, considerations, judgment)
 3. Generate synthetic intermediates working backwards:
    - From the decision, imagine what client persona and initial facts would have led here
    - From the client context, generate what the qualification would have been
@@ -57,7 +58,7 @@ lexic/
 │       │   ├── investigation_order.py    # InvestigationOrderAgent
 │       │   ├── investigation_report.py   # InvestigationReportAgent
 │       │   ├── factual_record.py         # FactualRecordAgent
-│       │   ├── legal_bases.py            # LegalBasisAgent
+│       │   ├── legal_basis.py            # LegalBasisAgent
 │       │   ├── arguments.py              # ArgumentationAgent
 │       │   ├── considerations.py         # ConsiderationAgent
 │       │   ├── recommendations.py        # RecommendationAgent
@@ -91,28 +92,30 @@ lexic/
 │   │   │   ├── full_text.md
 │   │   │   ├── parties.md
 │   │   │   ├── facts_timeline.md
-│   │   │   ├── legal_bases.md
+│   │   │   ├── legal_basis.md
 │   │   │   ├── arguments.md
 │   │   │   ├── considerations.md
 │   │   │   └── judgment.md
 │   │   └── ...
 │   │
 │   ├── synthetic_cases/          # Generated synthetic cases with ground truth
-│   │   ├── case_001/
+│   │   ├── case_001_pl/          # Plaintiff perspective
 │   │   │   ├── metadata.md
-│   │   │   ├── 01_client_persona.md
-│   │   │   ├── 02_initial_facts_known.md
-│   │   │   ├── 03_gt_qualification.md
-│   │   │   ├── 04_gt_initial_analysis.md
-│   │   │   ├── 05_gt_investigation_order_1.md
-│   │   │   ├── 06_gt_investigation_report_1.md
-│   │   │   ├── 09_gt_initial_factual_record.md
-│   │   │   ├── 10_gt_final_factual_record.md
-│   │   │   ├── 11_gt_applicable_legal_bases.md
-│   │   │   ├── 12_gt_legal_arguments.md
-│   │   │   ├── 13_gt_considerations.md
-│   │   │   ├── 14_gt_judgment.md
-│   │   │   └── 15_gt_recommendations.md
+│   │   │   ├── 00a_client_persona.md
+│   │   │   ├── 00b_initial_facts_known.md
+│   │   │   ├── 01_client_request.md
+│   │   │   ├── 02_gt_initial_qualification.md
+│   │   │   ├── 03_gt_initial_analysis.md
+│   │   │   ├── 04_gt_initial_investigation_order.md
+│   │   │   ├── 11_gt_final_investigation_report.md
+│   │   │   ├── 12_gt_final_factual_record.md
+│   │   │   ├── 14_gt_final_legal_basis.md
+│   │   │   ├── 15_gt_final_legal_arguments.md
+│   │   │   ├── 16_gt_considerations.md
+│   │   │   ├── 17_gt_expected_judgment.md
+│   │   │   └── 18_gt_recommendations.md
+│   │   ├── case_001_df/          # Defendant perspective
+│   │   │   └── ...
 │   │   └── ...
 │   │
 │   └── eval_runs/                # Evaluation run results
@@ -227,7 +230,7 @@ open http://localhost:5000
 - `investigation_order`: Analysis → investigation order
 - `investigation_report`: Order → investigation report
 - `factual_record`: Facts → structured factual record
-- `legal_bases`: Factual record → applicable legal provisions
+- `legal_basis`: Factual record → applicable legal provisions
 - `legal_arguments`: Factual record + bases → arguments
 - `considerations`: Arguments → legal considerations
 - `recommendations`: Considerations → client recommendations

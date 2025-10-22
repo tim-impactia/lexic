@@ -1,8 +1,8 @@
 description: |
-  Créer un ordre d'investigation basé sur l'analyse initiale.
+  Créer une ordonnance d'instruction basée sur l'analyse initiale.
 
   Produit:
-  - Objectif de l'investigation
+  - Objectif de l'instruction
   - Questions pour le client
   - Documents à demander
   - Délai optionnel
@@ -11,8 +11,8 @@ description: |
 
 input_fields:
   initial_analysis:
-    desc: "Analyse juridique initiale avec les besoins d'investigation"
+    desc: "Analyse juridique initiale avec les besoins d'instruction"
 
 output_fields:
   investigation_order:
-    desc: "Ordre d'investigation avec: objectif, questions (liste à puces), documents demandés (liste à puces). Répondre entièrement en français."
+    desc: "Ordonnance d'instruction avec: objectif, questions (liste à puces), documents demandés (liste à puces). Répondre entièrement en français."

@@ -60,7 +60,7 @@ lexic/
 │   ├── qualification.py       # Client qualification agent
 │   ├── initial_analysis.py    # Initial legal analysis agent
 │   ├── factual_record.py      # Factual record agent
-│   ├── legal_bases.py         # Legal basis identification agent
+│   ├── legal_basis.py         # Legal basis identification agent
 │   ├── arguments.py           # Legal argumentation agent
 │   ├── considerations.py      # Legal consideration agent
 │   └── recommendations.py     # Recommendation agent
@@ -100,7 +100,7 @@ lexic/
 3. **Investigation Order**: Analysis → information requests
 4. **Investigation Report**: Client response
 5. **Factual Record**: Structured facts
-6. **Legal Bases**: Applicable laws
+6. **Legal Basis**: Applicable laws
 7. **Legal Arguments**: Arguments from facts + laws
 8. **Considerations**: Legal analysis
 9. **Recommendations**: Client advice

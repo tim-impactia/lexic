@@ -12,7 +12,7 @@ description: |
 
 input_fields:
   considerations:
-    desc: "Considérations juridiques"
+    desc: "Considérants en droit"
   judgment:
     desc: "Jugement juridique ou issue attendue"
   client_objectives:

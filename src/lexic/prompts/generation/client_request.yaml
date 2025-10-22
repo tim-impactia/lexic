@@ -1,17 +1,18 @@
 description: |
-  Générer une demande client réaliste telle qu'il l'écrirait.
+  Générer une demande client réaliste basée UNIQUEMENT sur le persona et les faits initiaux connus.
   IMPORTANT: Répondre en français.
 
-  Si appel: Le client vient consulter AVANT tout jugement, pas après.
+  Le client vient consulter AVANT toute procédure judiciaire. La demande doit refléter uniquement
+  ce que le client sait au moment de la prise de contact.
 
 input_fields:
   client_persona:
     desc: "Persona du client avec contexte, état émotionnel, style de communication"
-  decision_context:
-    desc: "Faits et chronologie de la situation."
+  initial_facts:
+    desc: "Faits initiaux connus par le client au moment de la prise de contact"
   party_role:
     desc: "Rôle de la partie: 'demandeur' ou 'défendeur'"
 
 output_fields:
   client_request:
-    desc: "Demande/email/message initial du client en français, dans sa voix, avec son niveau de détail et d'émotion. Adapter au rôle: demandeur demande aide pour obtenir réparation, défendeur demande aide pour se défendre. Doit refléter son persona, rester relativement bref, éviter les dates et sans trop de structure. Si appel, le client vient AVANT tout jugement."
+    desc: "Demande/email/message initial du client en français, basée UNIQUEMENT sur les faits initiaux connus. Dans sa voix, avec son niveau de détail et d'émotion. Adapter au rôle: demandeur demande aide pour obtenir réparation, défendeur demande aide pour se défendre. Doit refléter son persona, rester relativement bref, éviter les dates et sans trop de structure."

@@ -1,17 +1,18 @@
 description: |
-  Générer les recommandations au client.
+  Générer les recommandations au client basées sur le résultat anticipé.
   IMPORTANT: Répondre en français.
 
-  Si appel: Recommandations basées sur le jugement FINAL (après appel si applicable), mais adaptées aux objectifs du litige ORIGINAL.
+  Les recommandations doivent être écrites comme si on anticipait le résultat
+  (pas comme réaction à un jugement déjà rendu).
 
 input_fields:
-  judgment:
-    desc: "Jugement du tribunal (final après appel si applicable)"
+  expected_judgment:
+    desc: "Résultat attendu/anticipé du tribunal"
   considerations:
-    desc: "Considérations juridiques"
+    desc: "Considérants en droit"
   client_objectives:
-    desc: "Objectifs du client (du litige original si appel)"
+    desc: "Objectifs du client de la qualification"
 
 output_fields:
   recommendations:
-    desc: "Recommandations en français (action, justification, risques, alternatives, prochaines étapes). Basées sur le jugement final mais en lien avec les objectifs originaux du client."
+    desc: "Recommandations en français (action recommandée, justification basée sur les considérants en droit et le résultat attendu, risques identifiés, alternatives possibles, prochaines étapes). Écrites comme anticipation du résultat, en lien avec les objectifs du client."

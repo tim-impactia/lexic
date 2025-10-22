@@ -29,7 +29,7 @@ Available document numbers:
   06   - Ground Truth: Investigation Report
   09   - Ground Truth: Initial Factual Record
   10   - Ground Truth: Final Factual Record
-  11   - Ground Truth: Applicable Legal Bases
+  11   - Ground Truth: Applicable Legal Basis
   12   - Ground Truth: Legal Arguments
   13   - Ground Truth: Considerations
   14   - Ground Truth: Judgment

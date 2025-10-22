@@ -82,7 +82,7 @@ class CourtDecisionExtractor(dspy.Module):
             parties=apply_mapping(result.parties),
             facts_timeline=apply_mapping(result.facts_timeline),
             evidence=apply_mapping(result.evidence),
-            legal_bases=apply_mapping(result.legal_bases),
+            legal_basis=apply_mapping(result.legal_basis),
             arguments=apply_mapping(result.arguments),
             considerations=apply_mapping(result.considerations),
             judgment=apply_mapping(result.judgment),
@@ -141,7 +141,7 @@ def extract_decision(doc_path: Path, output_dir: Path, decision_id: str):
         "parties": decision_dir / "parties.md",
         "facts_timeline": decision_dir / "facts_timeline.md",
         "evidence": decision_dir / "evidence.md",
-        "legal_bases": decision_dir / "legal_bases.md",
+        "legal_basis": decision_dir / "legal_basis.md",
         "arguments": decision_dir / "arguments.md",
         "considerations": decision_dir / "considerations.md",
         "judgment": decision_dir / "judgment.md"
@@ -185,8 +185,8 @@ def extract_decision(doc_path: Path, output_dir: Path, decision_id: str):
         if "evidence" in missing_docs:
             write_markdown(missing_docs["evidence"], metadata, f"# Evidence\n\n{result.evidence}")
 
-        if "legal_bases" in missing_docs:
-            write_markdown(missing_docs["legal_bases"], metadata, f"# Legal Bases\n\n{result.legal_bases}")
+        if "legal_basis" in missing_docs:
+            write_markdown(missing_docs["legal_basis"], metadata, f"# Legal Basis\n\n{result.legal_basis}")
 
         if "arguments" in missing_docs:
             write_markdown(missing_docs["arguments"], metadata, f"# Legal Arguments\n\n{result.arguments}")
