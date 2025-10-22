@@ -1,4 +1,4 @@
-"""Initial analysis agent - produces initial legal analysis from situation."""
+"""Initial analysis agent - produces initial legal analysis from qualification."""
 
 import dspy
 from lexic.shared.prompts import create_signature
@@ -14,15 +14,15 @@ class InitialAnalysisAgent(dspy.Module):
         super().__init__()
         self.analyze = dspy.ChainOfThought(PerformInitialAnalysis)
 
-    def forward(self, situation: str) -> str:
+    def forward(self, qualification: str) -> str:
         """
         Perform initial analysis.
 
         Args:
-            situation: Situation report
+            qualification: Qualification report
 
         Returns:
             Initial analysis as markdown text
         """
-        result = self.analyze(situation=situation)
+        result = self.analyze(qualification=qualification)
         return result.initial_analysis

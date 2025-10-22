@@ -1,11 +1,11 @@
-"""Qualification agent - transforms client dialogue into situation report."""
+"""Qualification agent - transforms client dialogue into qualification report."""
 
 import dspy
-from lexic.shared.models import ClientPersona, InitialFacts, Situation
+from lexic.shared.models import ClientPersona, InitialFacts, Qualification
 from lexic.shared.prompts import create_signature
 
 # Create signature from YAML
-QualifyClientSituation = create_signature("agents", "qualification")
+QualifyClientQualification = create_signature("agents", "qualification")
 
 
 class QualificationAgent(dspy.Module):
@@ -13,12 +13,12 @@ class QualificationAgent(dspy.Module):
     Agent that performs client qualification.
 
     Transforms client dialogue (persona + initial facts) into a structured
-    situation report that captures objectives, constraints, and legal questions.
+    qualification report that captures objectives, constraints.
     """
 
     def __init__(self):
         super().__init__()
-        self.qualify = dspy.ChainOfThought(QualifyClientSituation)
+        self.qualify = dspy.ChainOfThought(QualifyClientQualification)
 
     def forward(self, client_request: str) -> str:
         """
@@ -28,10 +28,10 @@ class QualificationAgent(dspy.Module):
             client_request: Client's initial request/message
 
         Returns:
-            Situation report as markdown text
+            Qualification report as markdown text
         """
         result = self.qualify(client_request=client_request)
-        return result.situation
+        return result.qualification
 
 
 def run_qualification(client_request: str) -> str:
@@ -42,7 +42,7 @@ def run_qualification(client_request: str) -> str:
         client_request: Client's initial request/message
 
     Returns:
-        Situation report
+        Qualification report
     """
     agent = QualificationAgent()
     return agent(client_request=client_request)

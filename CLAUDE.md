@@ -102,7 +102,7 @@ lexic/
 │   │   │   ├── metadata.md
 │   │   │   ├── 01_client_persona.md
 │   │   │   ├── 02_initial_facts_known.md
-│   │   │   ├── 03_gt_situation.md
+│   │   │   ├── 03_gt_qualification.md
 │   │   │   ├── 04_gt_initial_analysis.md
 │   │   │   ├── 05_gt_investigation_order_1.md
 │   │   │   ├── 06_gt_investigation_report_1.md
@@ -161,7 +161,7 @@ class QualificationAgent(dspy.Module):
     def __init__(self):
         super().__init__()
         self.qualify = dspy.ChainOfThought(
-            "client_persona, initial_facts -> situation"
+            "client_persona, initial_facts -> qualification"
         )
     
     def forward(self, client_persona, initial_facts):
@@ -169,7 +169,7 @@ class QualificationAgent(dspy.Module):
             client_persona=client_persona,
             initial_facts=initial_facts
         )
-        return result.situation
+        return result.qualification
 ```
 
 ## Evaluation Rubrics
@@ -222,8 +222,8 @@ open http://localhost:5000
 ```
 
 ### Available Pipeline Steps
-- `qualification`: Client dialogue → situation report
-- `initial_analysis`: Situation → initial legal analysis
+- `qualification`: Client dialogue → qualification report
+- `initial_analysis`: Qualification → initial legal analysis
 - `investigation_order`: Analysis → investigation order
 - `investigation_report`: Order → investigation report
 - `factual_record`: Facts → structured factual record
@@ -247,7 +247,7 @@ generated_at: 2025-01-04T15:30:22
 model: gpt-4o
 ---
 
-# Ground Truth: Situation
+# Ground Truth: Qualification
 
 ## Summary
 [Description of the legal situation]
@@ -261,10 +261,6 @@ model: gpt-4o
 - Budget constraints
 - Risk tolerance
 
-## Legal Questions
-- Question 1
-- Question 2
-```
 
 ### Reading/Writing Markdown Files
 

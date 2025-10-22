@@ -5,7 +5,7 @@ from pathlib import Path
 from datetime import datetime
 from typing import List
 from lexic.shared.models import (
-    ClientPersona, InitialFacts, Situation, InitialAnalysis,
+    ClientPersona, InitialFacts, Qualification, InitialAnalysis,
     InvestigationOrder, InvestigationReport, FactualRecord,
     LegalBasis, LegalArgument, Consideration, Judgment, Recommendation
 )
@@ -17,7 +17,7 @@ from lexic.shared.prompts import create_signature
 GenerateClientPersona = create_signature("generation", "client_persona")
 GenerateClientRequest = create_signature("generation", "client_request")
 GenerateInitialFacts = create_signature("generation", "initial_facts")
-GenerateSituation = create_signature("generation", "situation")
+GenerateQualification = create_signature("generation", "qualification")
 GenerateInitialAnalysis = create_signature("generation", "initial_analysis")
 GenerateInvestigationOrder = create_signature("generation", "investigation_order")
 GenerateInvestigationReport = create_signature("generation", "investigation_report")
@@ -33,7 +33,7 @@ class SyntheticCaseGenerator(dspy.Module):
         self.gen_persona = dspy.ChainOfThought(GenerateClientPersona)
         self.gen_client_request = dspy.ChainOfThought(GenerateClientRequest)
         self.gen_initial_facts = dspy.ChainOfThought(GenerateInitialFacts)
-        self.gen_situation = dspy.ChainOfThought(GenerateSituation)
+        self.gen_qualification = dspy.ChainOfThought(GenerateQualification)
         self.gen_initial_analysis = dspy.ChainOfThought(GenerateInitialAnalysis)
         self.gen_investigation_order = dspy.ChainOfThought(GenerateInvestigationOrder)
         self.gen_investigation_report = dspy.ChainOfThought(GenerateInvestigationReport)
@@ -70,8 +70,8 @@ class SyntheticCaseGenerator(dspy.Module):
             client_persona=persona.client_persona
         )
 
-        print("  Generating situation report...")
-        situation = self.gen_situation(
+        print("  Generating qualification report...")
+        qualification = self.gen_qualification(
             client_persona=persona.client_persona,
             initial_facts=initial_facts.initial_facts,
             decision_context=decision_context
@@ -79,7 +79,7 @@ class SyntheticCaseGenerator(dspy.Module):
 
         print("  Generating initial analysis...")
         initial_analysis = self.gen_initial_analysis(
-            situation=situation.situation,
+            qualification=qualification.qualification,
             decision_legal_bases=decision_data['legal_bases']
         )
 
@@ -113,14 +113,14 @@ class SyntheticCaseGenerator(dspy.Module):
         recommendations = self.gen_recommendations(
             judgment=decision_data['judgment'],
             considerations=decision_data['considerations'],
-            client_objectives=situation.situation
+            client_objectives=qualification.qualification.objectives
         )
 
         return dspy.Prediction(
             client_persona=persona.client_persona,
             client_request=client_request.client_request,
             initial_facts=initial_facts.initial_facts,
-            situation=situation.situation,
+            qualification=qualification.qualification,
             initial_analysis=initial_analysis.initial_analysis,
             investigation_order=investigation_order.investigation_order,
             investigation_report=investigation_report.investigation_report,
@@ -255,20 +255,20 @@ def generate_synthetic_case(decision_id: str, case_id: str, party_role: str, dec
         doc_number="02"
     )
 
-    situation = save_if_missing(
-        "03_gt_situation.md", "Ground Truth: Situation", "",
-        lambda: generator.gen_situation(
+    qualification = save_if_missing(
+        "03_gt_qualification.md", "Ground Truth: Qualification", "",
+        lambda: generator.gen_qualification(
             client_persona=client_persona,
             initial_facts=initial_facts,
             decision_context=decision_context
-        ).situation,
+        ).qualification,
         doc_number="03"
     )
 
     initial_analysis = save_if_missing(
         "04_gt_initial_analysis.md", "Ground Truth: Initial Analysis", "",
         lambda: generator.gen_initial_analysis(
-            situation=situation,
+            qualification=qualification,
             decision_legal_bases=decision_data['legal_bases']
         ).initial_analysis,
         doc_number="04"
@@ -323,7 +323,7 @@ def generate_synthetic_case(decision_id: str, case_id: str, party_role: str, dec
         lambda: generator.gen_recommendations(
             judgment=decision_data['judgment'],
             considerations=decision_data['considerations'],
-            client_objectives=situation
+            client_objectives=qualification
         ).recommendations,
         doc_number="15"
     )

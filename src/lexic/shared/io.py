@@ -74,7 +74,7 @@ def load_case_step(case_dir: Path, step_name: str) -> Tuple[Dict[str, Any], str]
 
     Args:
         case_dir: Path to case directory
-        step_name: Name of the step file (e.g., '03_gt_situation.md')
+        step_name: Name of the step file (e.g., '03_gt_qualification.md')
 
     Returns:
         Tuple of (metadata, content)

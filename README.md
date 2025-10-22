@@ -95,8 +95,8 @@ lexic/
 
 ### Legal AI Pipeline Steps
 
-1. **Qualification**: Client dialogue → situation report
-2. **Initial Analysis**: Situation → legal analysis
+1. **Qualification**: Client dialogue → qualification report
+2. **Initial Analysis**: Qualification → legal analysis
 3. **Investigation Order**: Analysis → information requests
 4. **Investigation Report**: Client response
 5. **Factual Record**: Structured facts

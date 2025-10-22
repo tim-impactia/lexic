@@ -13,5 +13,5 @@ input_fields:
     desc: "Demande/message initial du client tel qu'écrit par lui, reflétant son style de communication, son état émotionnel et son niveau de détail"
 
 output_fields:
-  situation:
-    desc: "Rapport de situation structuré avec: résumé, objectifs (liste à puces), contraintes (liste à puces). Répondre entièrement en français."
+  qualification:
+    desc: "Rapport de qualification structuré avec: résumé, objectifs (liste à puces), contraintes (liste à puces). Répondre entièrement en français."

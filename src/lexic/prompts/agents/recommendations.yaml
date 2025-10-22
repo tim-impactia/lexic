@@ -16,7 +16,7 @@ input_fields:
   judgment:
     desc: "Jugement juridique ou issue attendue"
   client_objectives:
-    desc: "Objectifs du client tirés du rapport de situation"
+    desc: "Objectifs du client tirés du rapport de qualification"
 
 output_fields:
   recommendations:

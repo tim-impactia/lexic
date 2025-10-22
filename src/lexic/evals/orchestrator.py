@@ -23,15 +23,15 @@ AGENT_REGISTRY = {
 # Map step names to input step files
 STEP_INPUTS = {
     "qualification": ["01b_client_request.md"],
-    "initial_analysis": ["03_gt_situation.md"],
+    "initial_analysis": ["03_gt_qualification.md"],
     "factual_record": ["02_initial_facts_known.md", "06_gt_investigation_report_1.md"],
     "legal_arguments": ["10_gt_final_factual_record.md", "11_gt_applicable_legal_bases.md"],
-    "recommendations": ["13_gt_considerations.md", "14_gt_judgment.md", "03_gt_situation.md"],
+    "recommendations": ["13_gt_considerations.md", "14_gt_judgment.md", "03_gt_qualification.md"],
 }
 
 # Map step names to ground truth files
 STEP_GROUND_TRUTH = {
-    "qualification": "03_gt_situation.md",
+    "qualification": "03_gt_qualification.md",
     "initial_analysis": "04_gt_initial_analysis.md",
     "factual_record": "10_gt_final_factual_record.md",
     "legal_arguments": "12_gt_legal_arguments.md",
@@ -94,11 +94,11 @@ def load_step_inputs(case_dir: Path, step_name: str) -> Dict[str, str]:
             inputs["client_persona"] = content
         elif "initial_facts" in input_file:
             inputs["initial_facts"] = content
-        elif "situation" in input_file:
+        elif "qualification" in input_file:
             if step_name == "recommendations":
                 inputs["client_objectives"] = content
             else:
-                inputs["situation"] = content
+                inputs["qualification"] = content
         elif "investigation_report" in input_file:
             inputs["investigation_report"] = content
         elif "factual_record" in input_file:

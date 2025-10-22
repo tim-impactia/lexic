@@ -23,7 +23,7 @@ Available document numbers:
   01   - Client Persona
   01b  - Client Request
   02   - Initial Facts Known
-  03   - Ground Truth: Situation
+  03   - Ground Truth: Qualification
   04   - Ground Truth: Initial Analysis
   05   - Ground Truth: Investigation Order
   06   - Ground Truth: Investigation Report

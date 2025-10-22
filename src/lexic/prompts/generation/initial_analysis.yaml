@@ -5,8 +5,8 @@ description: |
   Si appel: Analyse pour le litige ORIGINAL, comme si c'était la première consultation.
 
 input_fields:
-  situation:
-    desc: "Rapport de situation"
+  qualification:
+    desc: "Rapport de qualification"
   decision_legal_bases:
     desc: "Bases légales de la décision (du litige original si appel)"
 

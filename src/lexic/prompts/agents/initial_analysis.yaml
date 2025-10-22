@@ -1,5 +1,5 @@
 description: |
-  Effectuer une analyse juridique initiale basée sur la situation du client.
+  Effectuer une analyse juridique initiale basée sur la qualification du client.
 
   Produit:
   - Identification du domaine juridique
@@ -11,8 +11,8 @@ description: |
   IMPORTANT: Répondre entièrement en français.
 
 input_fields:
-  situation:
-    desc: "Situation du client: résumé, objectifs, contraintes, questions juridiques"
+  qualification:
+    desc: "Qualification du client: résumé de la situation, objectifs, contraintes"
 
 output_fields:
   initial_analysis:

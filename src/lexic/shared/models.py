@@ -26,17 +26,16 @@ class InitialFacts:
 
 
 @dataclass
-class Situation:
-    """Client situation after qualification dialogue."""
+class Qualification:
+    """Client case overview after qualification dialogue."""
     summary: str
     objectives: List[str]
     constraints: List[str]
-    legal_questions: List[str]
 
 
 @dataclass
 class InitialAnalysis:
-    """Initial legal analysis based on situation."""
+    """Initial legal analysis based on qualification."""
     legal_domain: str
     potential_legal_bases: List[str]
     preliminary_assessment: str
@@ -139,7 +138,7 @@ class SyntheticCase:
     metadata: dict
     client_persona: ClientPersona
     initial_facts: InitialFacts
-    gt_situation: Situation
+    gt_qualification: Qualification
     gt_initial_analysis: InitialAnalysis
     gt_investigation_order_1: InvestigationOrder
     gt_investigation_report_1: InvestigationReport

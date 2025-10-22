@@ -44,21 +44,21 @@ class LexicPipeline:
             initial_facts: Initial facts from client
 
         Returns:
-            Dict with situation and initial_analysis
+            Dict with qualification and initial_analysis
         """
         # Step 1: Qualification
-        situation = self.qualification_agent(
+        qualification = self.qualification_agent(
             client_persona=client_persona,
             initial_facts=initial_facts
         )
 
         # Step 2: Initial analysis
         initial_analysis = self.initial_analysis_agent(
-            situation=situation
+            qualification=qualification
         )
 
         return {
-            "situation": situation,
+            "qualification": qualification,
             "initial_analysis": initial_analysis
         }
 
@@ -137,7 +137,7 @@ class LexicPipeline:
         Args:
             legal_arguments: Legal arguments
             factual_record: Factual record
-            client_objectives: Client objectives from situation
+            client_objectives: Client objectives from qualification
             judgment: Optional judgment (can be predicted or actual)
 
         Returns:
@@ -201,7 +201,7 @@ class LexicPipeline:
         phase4 = self.run_final_phase(
             phase3["legal_arguments"],
             phase2["factual_record"],
-            phase1["situation"],
+            phase1["qualification"],
             judgment
         )
 

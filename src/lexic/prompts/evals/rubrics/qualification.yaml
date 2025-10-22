@@ -2,7 +2,7 @@ step_name: qualification
 
 dimensions:
   - name: Completeness
-    description: Does the situation report capture all relevant aspects?
+    description: Does the qualification report capture all relevant aspects?
     weight: 0.3
     criteria:
       1: Missing multiple critical elements (summary, objectives, or constraints)
@@ -12,7 +12,7 @@ dimensions:
       5: Fully comprehensive, all relevant aspects captured
 
   - name: Accuracy
-    description: Is the situation report accurate given the client persona and initial facts?
+    description: Is the qualification report accurate given the client persona and initial facts?
     weight: 0.25
     criteria:
       1: Major inaccuracies or misinterpretations
@@ -32,7 +32,7 @@ dimensions:
       5: Perfectly focused, no irrelevant content
 
   - name: Clarity
-    description: Is the situation report well-structured and clear?
+    description: Is the qualification report well-structured and clear?
     weight: 0.1
     criteria:
       1: Poorly structured, difficult to understand
