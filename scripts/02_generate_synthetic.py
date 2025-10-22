@@ -20,20 +20,19 @@ def main():
         description="Generate synthetic cases from court decisions",
         epilog="""
 Available document numbers:
-  01   - Client Persona
-  01b  - Client Request
-  02   - Initial Facts Known
-  03   - Ground Truth: Qualification
-  04   - Ground Truth: Initial Analysis
-  05   - Ground Truth: Investigation Order
-  06   - Ground Truth: Investigation Report
-  09   - Ground Truth: Initial Factual Record
-  10   - Ground Truth: Final Factual Record
-  11   - Ground Truth: Applicable Legal Basis
-  12   - Ground Truth: Legal Arguments
-  13   - Ground Truth: Considerations
-  14   - Ground Truth: Judgment
-  15   - Ground Truth: Recommendations
+  00a  - Client Persona
+  00b  - Initial Facts Known to Client
+  01   - Ground Truth: Client Request
+  02   - Ground Truth: Initial Qualification
+  03   - Ground Truth: Initial Analysis
+  04   - Ground Truth: Initial Investigation Order
+  11   - Ground Truth: Final Investigation Report
+  12   - Ground Truth: Final Factual Record
+  14   - Ground Truth: Final Legal Basis
+  15   - Ground Truth: Final Legal Arguments
+  16   - Ground Truth: Considerations
+  17   - Ground Truth: Expected Judgment
+  18   - Ground Truth: Recommendations
 
 Examples:
   # Generate all cases from all decisions
@@ -46,10 +45,10 @@ Examples:
   python scripts/02_generate_synthetic.py --decision decision_001 --party plaintiff
 
   # Generate only specific documents (e.g., client persona and initial facts)
-  python scripts/02_generate_synthetic.py --decision decision_001 --docs 01 02
+  python scripts/02_generate_synthetic.py --decision decision_001 --docs 00a 00b
 
   # Regenerate recommendations for all existing cases
-  python scripts/02_generate_synthetic.py --decision decision_001 --docs 15
+  python scripts/02_generate_synthetic.py --decision decision_001 --docs 18
         """,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )

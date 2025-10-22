@@ -7,7 +7,7 @@ from lexic.agents.qualification import QualificationAgent
 from lexic.agents.initial_analysis import InitialAnalysisAgent
 from lexic.agents.investigation_order import InvestigationOrderAgent
 from lexic.agents.factual_record import FactualRecordAgent
-from lexic.agents.legal_bases import LegalBasisAgent
+from lexic.agents.legal_basis import LegalBasisAgent
 from lexic.agents.arguments import ArgumentationAgent
 from lexic.agents.considerations import ConsiderationAgent
 from lexic.agents.recommendations import RecommendationAgent
@@ -106,21 +106,21 @@ class LexicPipeline:
             factual_record: Structured factual record
 
         Returns:
-            Dict with legal_bases and legal_arguments
+            Dict with legal_basis and legal_arguments
         """
-        # Step 5: Identify legal bases
-        legal_bases = self.legal_basis_agent(
+        # Step 5: Identify legal basis
+        legal_basis = self.legal_basis_agent(
             factual_record=factual_record
         )
 
         # Step 6: Develop legal arguments
         legal_arguments = self.argumentation_agent(
             factual_record=factual_record,
-            legal_bases=legal_bases
+            legal_basis=legal_basis
         )
 
         return {
-            "legal_bases": legal_bases,
+            "legal_basis": legal_basis,
             "legal_arguments": legal_arguments
         }
 

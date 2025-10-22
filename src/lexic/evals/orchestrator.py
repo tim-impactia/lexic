@@ -22,20 +22,20 @@ AGENT_REGISTRY = {
 
 # Map step names to input step files
 STEP_INPUTS = {
-    "qualification": ["01b_client_request.md"],
-    "initial_analysis": ["03_gt_qualification.md"],
-    "factual_record": ["02_initial_facts_known.md", "06_gt_investigation_report_1.md"],
-    "legal_arguments": ["10_gt_final_factual_record.md", "11_gt_applicable_legal_bases.md"],
-    "recommendations": ["13_gt_considerations.md", "14_gt_judgment.md", "03_gt_qualification.md"],
+    "qualification": ["01_client_request.md"],
+    "initial_analysis": ["02_gt_initial_qualification.md"],
+    "factual_record": ["00b_initial_facts_known.md", "11_gt_final_investigation_report.md"],
+    "legal_arguments": ["12_gt_final_factual_record.md", "14_gt_final_legal_basis.md"],
+    "recommendations": ["16_gt_considerations.md", "17_gt_expected_judgment.md", "02_gt_initial_qualification.md"],
 }
 
 # Map step names to ground truth files
 STEP_GROUND_TRUTH = {
-    "qualification": "03_gt_qualification.md",
-    "initial_analysis": "04_gt_initial_analysis.md",
-    "factual_record": "10_gt_final_factual_record.md",
-    "legal_arguments": "12_gt_legal_arguments.md",
-    "recommendations": "15_gt_recommendations.md",
+    "qualification": "02_gt_initial_qualification.md",
+    "initial_analysis": "03_gt_initial_analysis.md",
+    "factual_record": "12_gt_final_factual_record.md",
+    "legal_arguments": "15_gt_final_legal_arguments.md",
+    "recommendations": "18_gt_recommendations.md",
 }
 
 
@@ -103,8 +103,8 @@ def load_step_inputs(case_dir: Path, step_name: str) -> Dict[str, str]:
             inputs["investigation_report"] = content
         elif "factual_record" in input_file:
             inputs["factual_record"] = content
-        elif "legal_bases" in input_file:
-            inputs["legal_bases"] = content
+        elif "legal_basis" in input_file:
+            inputs["legal_basis"] = content
         elif "considerations" in input_file:
             inputs["considerations"] = content
         elif "judgment" in input_file:
