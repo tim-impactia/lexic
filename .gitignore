@@ -47,6 +47,7 @@ venv.bak/
 data/court_decisions/*/
 data/synthetic_cases/*/
 data/eval_runs/*/
+data/pipeline_runs/*/
 mlruns/
 mlartifacts/
 backup/

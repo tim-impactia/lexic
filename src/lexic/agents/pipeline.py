@@ -37,23 +37,20 @@ class LexicPipeline:
 
     def run_intake_to_analysis(
         self,
-        client_persona: str,
-        initial_facts: str
+        client_request: str
     ) -> Dict[str, str]:
         """
         Run first phase: intake to initial analysis.
 
         Args:
-            client_persona: Client background and context
-            initial_facts: Initial facts from client
+            client_request: Client's initial request/message
 
         Returns:
             Dict with qualification and initial_analysis
         """
         # Step 1: Qualification
         qualification = self.qualification_agent(
-            client_persona=client_persona,
-            initial_facts=initial_facts
+            client_request=client_request
         )
 
         # Step 2: Initial analysis
@@ -188,39 +185,65 @@ class LexicPipeline:
 
     def run_full_pipeline(
         self,
+        client_request: str,
         client_persona: str,
-        initial_facts: str
+        initial_facts: str,
+        verbose: bool = False
     ) -> Dict[str, str]:
         """
         Run the complete pipeline from intake to recommendations.
 
         Args:
+            client_request: Client's initial request/message
             client_persona: Client background and context
             initial_facts: Initial facts from client
+            verbose: Whether to print progress messages (default: False)
 
         Returns:
             Dict with all pipeline outputs including predicted judgment
         """
         # Phase 1: Intake to analysis
-        phase1 = self.run_intake_to_analysis(client_persona, initial_facts)
+        if verbose:
+            print("  [1/4] Running intake & analysis phase...")
+        phase1 = self.run_intake_to_analysis(client_request)
+        if verbose:
+            print("    ✓ Qualification complete")
+            print("    ✓ Initial analysis complete")
 
         # Phase 2: Investigation (generates investigation_report automatically)
+        if verbose:
+            print("  [2/4] Running investigation phase...")
         phase2 = self.run_investigation_phase(
             phase1["initial_analysis"],
             client_persona,
             initial_facts
         )
+        if verbose:
+            print("    ✓ Investigation order complete")
+            print("    ✓ Investigation report complete")
+            print("    ✓ Factual record complete")
 
         # Phase 3: Legal analysis
+        if verbose:
+            print("  [3/4] Running legal analysis phase...")
         phase3 = self.run_legal_analysis(phase2["factual_record"])
+        if verbose:
+            print("    ✓ Legal basis complete")
+            print("    ✓ Legal arguments complete")
 
         # Phase 4: Final phase (considerations, judgment prediction, recommendations)
+        if verbose:
+            print("  [4/4] Running final phase...")
         phase4 = self.run_final_phase(
             phase3["legal_arguments"],
             phase2["factual_record"],
             phase1["qualification"],
             use_predicted_judgment=True
         )
+        if verbose:
+            print("    ✓ Considerations complete")
+            print("    ✓ Judgment prediction complete")
+            print("    ✓ Recommendations complete")
 
         # Combine all results
         return {

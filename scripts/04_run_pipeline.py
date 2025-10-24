@@ -16,9 +16,41 @@ from lexic.shared.io import list_cases, load_case_step, write_markdown, get_case
 from lexic.agents.pipeline import LexicPipeline
 
 
+def save_step_output(output_dir: Path, case_id: str, step_name: str, content: str):
+    """Save a single step output immediately."""
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    timestamp = datetime.now().isoformat()
+    metadata = {
+        "case_id": case_id,
+        "run_at": timestamp,
+        "model": Config.DEFAULT_MODEL,
+        "step": step_name,
+    }
+
+    # Map step names to output filenames with numbering matching ground truth
+    filename_map = {
+        "qualification": "02_pred_initial_qualification.md",
+        "initial_analysis": "03_pred_initial_analysis.md",
+        "investigation_order": "04_pred_initial_investigation_order.md",
+        "investigation_report": "11_pred_final_investigation_report.md",
+        "factual_record": "12_pred_final_factual_record.md",
+        "legal_basis": "14_pred_final_legal_basis.md",
+        "legal_arguments": "15_pred_final_legal_arguments.md",
+        "considerations": "16_pred_considerations.md",
+        "judgment": "17_pred_expected_judgment.md",
+        "recommendations": "18_pred_recommendations.md",
+    }
+
+    filename = filename_map.get(step_name, f"pred_{step_name}.md")
+    output_path = output_dir / filename
+    write_markdown(output_path, metadata, content)
+    print(f"      → Saved to {filename}")
+
+
 def run_pipeline_on_case(case_dir: Path, output_dir: Path) -> dict:
     """
-    Run the full pipeline on a single case.
+    Run the full pipeline on a single case, saving outputs after each step.
 
     Args:
         case_dir: Path to the case directory
@@ -30,57 +62,67 @@ def run_pipeline_on_case(case_dir: Path, output_dir: Path) -> dict:
     # Load inputs
     _, client_persona = load_case_step(case_dir, "00a_client_persona.md")
     _, initial_facts = load_case_step(case_dir, "00b_initial_facts_known.md")
+    _, client_request = load_case_step(case_dir, "01_client_request.md")
 
     print(f"Running pipeline for case: {case_dir.name}")
     print(f"  Client persona loaded: {len(client_persona)} chars")
     print(f"  Initial facts loaded: {len(initial_facts)} chars")
+    print(f"  Client request loaded: {len(client_request)} chars")
     print()
 
     # Initialize pipeline
     pipeline = LexicPipeline()
 
-    # Run full pipeline (includes judgment prediction)
-    print("Running full pipeline...")
-    results = pipeline.run_full_pipeline(
-        client_persona=client_persona,
-        initial_facts=initial_facts
-    )
-
-    # Save outputs
+    # Create output directory
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    timestamp = datetime.now().isoformat()
-    metadata = {
-        "case_id": case_dir.name,
-        "run_at": timestamp,
-        "model": Config.DEFAULT_MODEL,
-    }
+    # Run pipeline step by step, saving after each step
+    print("Running pipeline with incremental saves...")
+    all_results = {}
 
-    # Map result keys to output filenames
-    output_files = {
-        "qualification": "pred_qualification.md",
-        "initial_analysis": "pred_initial_analysis.md",
-        "investigation_order": "pred_investigation_order.md",
-        "investigation_report": "pred_investigation_report.md",
-        "factual_record": "pred_factual_record.md",
-        "legal_basis": "pred_legal_basis.md",
-        "legal_arguments": "pred_legal_arguments.md",
-        "considerations": "pred_considerations.md",
-        "judgment": "pred_judgment.md",
-        "recommendations": "pred_recommendations.md",
-    }
+    # Phase 1: Intake to analysis
+    print("  [1/4] Running intake & analysis phase...")
+    phase1 = pipeline.run_intake_to_analysis(client_request)
+    all_results.update(phase1)
+    for key in ["qualification", "initial_analysis"]:
+        if key in phase1:
+            save_step_output(output_dir, case_dir.name, key, phase1[key])
 
-    print("\nSaving outputs:")
-    for key, filename in output_files.items():
-        if key in results:
-            output_path = output_dir / filename
-            write_markdown(output_path, metadata, results[key])
-            print(f"  ✓ {filename}")
-        else:
-            print(f"  ✗ {filename} (not generated)")
+    # Phase 2: Investigation
+    print("  [2/4] Running investigation phase...")
+    phase2 = pipeline.run_investigation_phase(
+        phase1["initial_analysis"],
+        client_persona,
+        initial_facts
+    )
+    all_results.update(phase2)
+    for key in ["investigation_order", "investigation_report", "factual_record"]:
+        if key in phase2:
+            save_step_output(output_dir, case_dir.name, key, phase2[key])
 
-    print(f"\nOutputs saved to: {output_dir}")
-    return results
+    # Phase 3: Legal analysis
+    print("  [3/4] Running legal analysis phase...")
+    phase3 = pipeline.run_legal_analysis(phase2["factual_record"])
+    all_results.update(phase3)
+    for key in ["legal_basis", "legal_arguments"]:
+        if key in phase3:
+            save_step_output(output_dir, case_dir.name, key, phase3[key])
+
+    # Phase 4: Final phase
+    print("  [4/4] Running final phase...")
+    phase4 = pipeline.run_final_phase(
+        phase3["legal_arguments"],
+        phase2["factual_record"],
+        phase1["qualification"],
+        use_predicted_judgment=True
+    )
+    all_results.update(phase4)
+    for key in ["considerations", "judgment", "recommendations"]:
+        if key in phase4:
+            save_step_output(output_dir, case_dir.name, key, phase4[key])
+
+    print(f"\n✓ All outputs saved to: {output_dir}")
+    return all_results
 
 
 def main():
@@ -144,9 +186,11 @@ def main():
         case_dirs = [case_dir]
     else:
         # Run on all cases
-        case_dirs = list_cases(Config.SYNTHETIC_CASES_DIR)
+        case_ids = list_cases(Config.SYNTHETIC_CASES_DIR)
         if args.n_cases:
-            case_dirs = case_dirs[:args.n_cases]
+            case_ids = case_ids[:args.n_cases]
+        # Convert case IDs to Path objects
+        case_dirs = [Config.SYNTHETIC_CASES_DIR / case_id for case_id in case_ids]
 
     print(f"Running pipeline on {len(case_dirs)} case(s)\n")
 
