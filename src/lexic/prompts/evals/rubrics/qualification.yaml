@@ -2,41 +2,51 @@ step_name: qualification
 
 dimensions:
   - name: Completeness
-    description: Does the qualification report capture all relevant aspects?
+    description: Does the qualification report capture all required sections (summary, client profile, complexity, objectives with implicit goals, non-legal constraints)?
     weight: 0.3
     criteria:
-      1: Missing multiple critical elements (summary, objectives, or constraints)
-      2: Missing one critical element or several important details
-      3: All critical elements present but some details lacking
+      1: Missing multiple critical sections (3+ sections absent or severely incomplete)
+      2: Missing one critical section or 2+ sections significantly incomplete
+      3: All sections present but some details lacking (e.g., missing implicit goals or complexity justification)
       4: Comprehensive with only minor omissions
-      5: Fully comprehensive, all relevant aspects captured
+      5: Fully comprehensive, all sections fully developed
 
   - name: Accuracy
-    description: Is the qualification report accurate given the client persona and initial facts?
+    description: Is the qualification report accurate given the client request? Are complexity rating, client profile, and goal inference appropriate?
     weight: 0.25
     criteria:
-      1: Major inaccuracies or misinterpretations
-      2: Several minor inaccuracies
-      3: Mostly accurate with few minor errors
+      1: Major inaccuracies or misinterpretations (wrong complexity level by 3+, inappropriate profile assessment)
+      2: Several minor inaccuracies (complexity off by 2, some goals misidentified)
+      3: Mostly accurate with few minor errors (complexity off by 1, mostly correct profile)
       4: Accurate with negligible errors
-      5: Fully accurate, no misinterpretations
+      5: Fully accurate, well-calibrated complexity and profile, correct goal inference
 
-  - name: Relevance
-    description: Are irrelevant details excluded?
+  - name: Constraint_Appropriateness
+    description: Are constraints appropriate (budget, deadlines including future legal deadlines, relationships, risk tolerance) without including inappropriate legal constraints (past deadlines, burden of proof, jurisdiction, etc.)?
     weight: 0.2
     criteria:
-      1: Significant irrelevant content included
-      2: Some irrelevant content
-      3: Mostly relevant with minor tangents
-      4: Highly relevant with minimal extraneous content
-      5: Perfectly focused, no irrelevant content
+      1: Significant inappropriate legal constraints included (past deadlines, burden of proof, jurisdictional issues, evidentiary challenges)
+      2: Some inappropriate legal constraints mixed in (e.g., past prescription deadlines mentioned)
+      3: Mostly appropriate but with minor inappropriate legal considerations
+      4: Clearly appropriate constraints with future deadlines properly included
+      5: Perfectly focused on appropriate constraints (budget, future legal deadlines, practical deadlines, relationships, risk)
+
+  - name: Relevance
+    description: Are irrelevant details excluded? Are implicit goals genuinely implicit (not just restating explicit ones)?
+    weight: 0.15
+    criteria:
+      1: Significant irrelevant content included, implicit goals are just restatements
+      2: Some irrelevant content, weak implicit goal inference
+      3: Mostly relevant with minor tangents, reasonable implicit goals
+      4: Highly relevant, insightful implicit goal identification
+      5: Perfectly focused, excellent implicit goal inference
 
   - name: Clarity
-    description: Is the qualification report well-structured and clear?
+    description: Is the qualification report well-structured with clear sections and clear complexity justification?
     weight: 0.1
     criteria:
-      1: Poorly structured, difficult to understand
-      2: Some structural issues, somewhat unclear
+      1: Poorly structured, difficult to understand, unclear sections
+      2: Some structural issues, somewhat unclear complexity reasoning
       3: Adequately structured and clear
-      4: Well-structured and clear
-      5: Exceptionally well-structured and crystal clear
+      4: Well-structured with clear complexity justification
+      5: Exceptionally well-structured, crystal clear sections and reasoning

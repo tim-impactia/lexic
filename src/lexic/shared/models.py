@@ -29,8 +29,10 @@ class InitialFacts:
 class Qualification:
     """Client case overview after qualification dialogue."""
     summary: str
-    objectives: List[str]
-    constraints: List[str]
+    client_profile: str  # Assessment of client's legal knowledge and communication style
+    case_complexity: int  # Complexity rating 1-10
+    objectives: List[str]  # Both explicit and implicit goals
+    constraints: List[str]  # Non-legal constraints: budget, deadlines, relationships, risk tolerance
 
 
 @dataclass

@@ -6,6 +6,21 @@ description: |
   mais l'avocat peut avoir une compréhension du contexte complet de la décision (pour créer
   une qualification réaliste qui mène à cette décision).
 
+  Le rapport doit inclure:
+  - Résumé de la situation
+  - Profil du client: évaluation du confort avec terminologie juridique et niveau de rigueur/complétude attendu (basé sur style d'écriture et détails fournis)
+  - Complexité du dossier: score de 1 à 10 où 1 = question simple, 10 = dossier pluriannuel complexe avec multiples parties/lois
+  - Objectifs: explicites (ce que le client dit vouloir) ET implicites (ce qu'il veut vraiment sous-jacent)
+  - Contraintes: budget disponible, délais (pratiques du client ET délais légaux FUTURS si applicables), relations à préserver, niveau de risque financier/réputationnel acceptable
+
+  CRITIQUE sur les contraintes - principalement NON juridiques, SAUF pour les délais:
+  - INCLURE: délais légaux futurs uniquement (ex: "délai de prescription expire dans 6 mois", "délai de recours jusqu'au 15 mars")
+  - INCLURE: délais pratiques du client (ex: "besoin résolution rapide car déménagement prévu")
+  - EXCLURE: délais déjà dépassés (ne PAS mentionner dans les contraintes)
+  - EXCLURE: autres contraintes juridiques (charges de preuve, obstacles procéduraux, compétence juridictionnelle, admissibilité des preuves, complexité juridique)
+
+  Focalisez sur: budget, timing (personnel + légal futur seulement), relations humaines, tolérance au risque.
+
 input_fields:
   client_request:
     desc: "Demande initiale du client"
@@ -14,4 +29,4 @@ input_fields:
 
 output_fields:
   qualification:
-    desc: "Rapport de qualification en français (résumé de la situation, objectifs du client, contraintes identifiées). Basé uniquement sur la demande client, mais avec compréhension du contexte décisionnel pour réalisme."
+    desc: "Rapport de qualification en français avec sections: résumé, profil client, complexité (score/10 avec justification), objectifs (explicites et implicites), contraintes non-juridiques. Basé uniquement sur la demande client, mais avec compréhension du contexte décisionnel pour réalisme."

@@ -3,8 +3,18 @@ description: |
 
   Le rapport de qualification capture:
   - Résumé de la situation juridique du client
-  - Objectifs du client (ce qu'il souhaite accomplir)
-  - Contraintes (temps, budget, tolérance au risque)
+  - Profil du client: évaluation du niveau de confort avec la terminologie juridique et du niveau de rigueur/complétude des réponses attendues
+  - Complexité du dossier: score de 1 à 10 (1 = question juridique simple, 10 = dossier complexe pluriannuel avec multiples parties et lois)
+  - Objectifs du client: objectifs explicites ET implicites
+  - Contraintes: budget disponible, délais (pratiques du client ET délais légaux FUTURS si applicables), relations à préserver, niveau de risque financier/réputationnel acceptable
+
+  CRITIQUE: Les contraintes doivent être principalement NON juridiques, SAUF pour les délais:
+  - INCLURE: délais légaux futurs (ex: "délai de prescription dans 6 mois", "délai de recours jusqu'au X")
+  - INCLURE: délais pratiques du client (ex: "besoin résolution rapide pour raisons personnelles")
+  - EXCLURE: délais déjà dépassés (ne pas les mentionner dans les contraintes)
+  - EXCLURE: autres contraintes juridiques (charges de preuve, compétence juridictionnelle, admissibilité des preuves, etc.)
+
+  Focalisez sur: budget, timing (personnel + légal futur), relations humaines, tolérance au risque.
 
   IMPORTANT: Répondre entièrement en français.
 
@@ -14,4 +24,4 @@ input_fields:
 
 output_fields:
   qualification:
-    desc: "Rapport de qualification structuré avec: résumé, objectifs (liste à puces), contraintes (liste à puces). Répondre entièrement en français."
+    desc: "Rapport de qualification structuré avec: résumé, profil client, complexité (score/10), objectifs (liste à puces incluant implicites), contraintes non-juridiques (liste à puces). Répondre entièrement en français."
