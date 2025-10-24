@@ -75,7 +75,11 @@ class CourtDecisionExtractor(dspy.Module):
             # Sort by length descending to replace longer patterns first
             # This prevents partial replacements (e.g., replacing "[...]" before "[...] Sàrl")
             for anon, real in sorted(mapping.items(), key=lambda x: len(x[0]), reverse=True):
+                # Replace both normal and markdown-escaped versions
                 result_text = result_text.replace(anon, real)
+                # Also replace markdown-escaped version (e.g., M.\\_\\_\\_\\_\\_\\_\\_\\_ for M.________)
+                escaped_anon = anon.replace('_', '\\_')
+                result_text = result_text.replace(escaped_anon, real)
             return result_text
 
         return dspy.Prediction(
